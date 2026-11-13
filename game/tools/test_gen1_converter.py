@@ -13,6 +13,30 @@ source_ref = manifest.get("source_branch", "main")
 base = f"https://gitlab.com/cable-mc/cobblemon/-/raw/{source_ref}/"
 items = {item["id"]: item for item in manifest["pokemon"]}
 
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
+
+GITLAB_API = "https://gitlab.com/api/v4/projects/cable-mc%2Fcobblemon/repository/tree"
+
+
+def list_gitlab_directory(path: str) -> list[dict]:
+    query = urlencode({"path": path, "ref": source_ref, "per_page": 100})
+    request = Request(GITLAB_API + "?" + query, headers={"User-Agent": "PokeBrawl-Gen1-Importer/1.0"})
+    with urlopen(request, timeout=30) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+for folder in ["0001_bulbasaur", "0024_arbok", "0026_raichu", "0016_pidgey"]:
+    print(f"--- Current GitLab files: {folder} ---")
+    for asset_root in [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations",
+        "common/src/main/resources/assets/cobblemon/textures/pokemon",
+    ]:
+        files = list_gitlab_directory(asset_root + "/" + folder)
+        print(asset_root.split("/")[-1] + ": " + ", ".join(x["name"] for x in files))
+
+
 SAMPLES = ["bulbasaur", "pikachu", "pidgey", "gengar", "charizard"]
 
 
