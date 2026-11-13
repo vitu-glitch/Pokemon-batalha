@@ -19,6 +19,7 @@ import re
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -29,7 +30,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 4
+CONVERTER_VERSION = 5
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 
 # Corner order produces outward normals; triangle indices are reversed below
@@ -63,10 +64,145 @@ def fetch_bytes(url: str, attempts: int = 5) -> bytes:
             request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
             with urllib.request.urlopen(request, timeout=45) as response:
                 return response.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                raise RuntimeError(f"HTTP Error 404: {url}") from exc
+            last = exc
+            time.sleep(min(2 ** attempt, 10))
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             last = exc
             time.sleep(min(2 ** attempt, 10))
     raise RuntimeError(f"Download failed: {url}\n{last}")
+
+
+_GITLAB_DIRECTORY_CACHE: dict[str, list[str]] = {}
+GITLAB_TREE_API = "https://gitlab.com/api/v4/projects/cable-mc%2Fcobblemon/repository/tree"
+
+ASSET_ROOTS = {
+    "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models",
+    "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations",
+    "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon",
+    "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon",
+}
+
+
+def gitlab_directory_names(directory: str, source_ref: str) -> list[str]:
+    cache_key = f"{source_ref}:{directory}"
+    if cache_key in _GITLAB_DIRECTORY_CACHE:
+        return _GITLAB_DIRECTORY_CACHE[cache_key]
+    query = urllib.parse.urlencode({
+        "path": directory,
+        "ref": source_ref,
+        "per_page": 100,
+    })
+    payload = json.loads(fetch_bytes(GITLAB_TREE_API + "?" + query, attempts=3).decode("utf-8"))
+    names = sorted(
+        entry["name"] for entry in payload
+        if isinstance(entry, dict) and entry.get("type") == "blob" and "name" in entry
+    )
+    _GITLAB_DIRECTORY_CACHE[cache_key] = names
+    return names
+
+
+def _is_http_404(error: Exception) -> bool:
+    return "HTTP Error 404" in str(error)
+
+
+def _choose_asset_name(names: list[str], species_id: str, asset_key: str) -> str:
+    if asset_key == "model":
+        candidates = [name for name in names if name.lower().endswith(".geo.json")]
+        preferred = [
+            f"{species_id}_male.geo.json",
+            f"{species_id}.geo.json",
+            f"{species_id}_female.geo.json",
+        ]
+        for name in preferred:
+            if name in candidates:
+                return name
+        if len(candidates) == 1:
+            return candidates[0]
+        male = [name for name in candidates if "_male." in name.lower()]
+        if male:
+            return sorted(male)[0]
+        exact_species = [name for name in candidates if species_id in name.lower()]
+        if len(exact_species) == 1:
+            return exact_species[0]
+        # Prefer the base/default model over costumes, regional forms and props.
+        neutral = [
+            name for name in candidates
+            if not any(token in name.lower() for token in ("alolan", "galarian", "hisui", "paldean", "cap_", "detective", "captain", "fluff"))
+        ]
+        if len(neutral) == 1:
+            return neutral[0]
+        if neutral:
+            return sorted(neutral)[0]
+    elif asset_key == "animations":
+        candidates = [name for name in names if name.lower().endswith(".animation.json")]
+        preferred = f"{species_id}.animation.json"
+        if preferred in candidates:
+            return preferred
+        if len(candidates) == 1:
+            return candidates[0]
+        species_matches = [name for name in candidates if species_id in name.lower()]
+        if species_matches:
+            return sorted(species_matches)[0]
+    elif asset_key == "texture":
+        candidates = [
+            name for name in names
+            if name.lower().endswith(".png")
+            and "shiny" not in name.lower()
+            and "alpha" not in name.lower()
+            and "emissive" not in name.lower()
+            and "pattern" not in name.lower()
+        ]
+        preferred = f"{species_id}.png"
+        if preferred in candidates:
+            return preferred
+        male = f"{species_id}_male.png"
+        if male in candidates:
+            return male
+        species_matches = [name for name in candidates if name.lower().startswith(species_id)]
+        if species_matches:
+            return sorted(species_matches)[0]
+        if len(candidates) == 1:
+            return candidates[0]
+    elif asset_key == "shiny_texture":
+        candidates = [
+            name for name in names
+            if name.lower().endswith(".png")
+            and "shiny" in name.lower()
+            and "emissive" not in name.lower()
+            and "pattern" not in name.lower()
+        ]
+        preferred = f"{species_id}_shiny.png"
+        if preferred in candidates:
+            return preferred
+        species_matches = [name for name in candidates if name.lower().startswith(species_id)]
+        if species_matches:
+            return sorted(species_matches)[0]
+        if len(candidates) == 1:
+            return candidates[0]
+    else:
+        raise ValueError(f"Unknown asset key: {asset_key}")
+    raise RuntimeError(
+        f"No default {asset_key} asset found for {species_id}. "
+        f"Files in source folder: {', '.join(names)}"
+    )
+
+
+def resolve_source_asset(item: dict, raw_base: str, asset_key: str, source_ref: str) -> tuple[str, bytes]:
+    original_path = str(item[asset_key])
+    try:
+        return original_path, fetch_bytes(raw_base + original_path, attempts=1)
+    except RuntimeError as exc:
+        if not _is_http_404(exc):
+            raise
+    folder = str(item.get("folder", Path(original_path).parent.name))
+    directory = ASSET_ROOTS[asset_key] + "/" + folder
+    names = gitlab_directory_names(directory, source_ref)
+    selected_name = _choose_asset_name(names, str(item["id"]), asset_key)
+    resolved_path = directory + "/" + selected_name
+    return resolved_path, fetch_bytes(raw_base + resolved_path)
 
 
 def fetch_json(base: str, path: str) -> dict:
@@ -562,53 +698,68 @@ def process_one(item, raw_base):
     model_path = target_dir / "model.json.gz"
     normal_path = target_dir / "texture.png"
     shiny_path = target_dir / "texture_shiny.png"
+    source_marker = target_dir / "import_source.txt"
+    previous_source = source_marker.read_text(encoding="utf-8").strip() if source_marker.exists() else ""
 
-    # Preserve the project's original hand-tuned models. Rebuild all imported models
-    # once when the converter format changes, then leave the up-to-date files alone.
+    # Preserve the project's original hand-tuned models. Imported models are rebuilt
+    # when either the converter format or the upstream asset source has changed.
     preserve_existing = species_id in {
         "bulbasaur", "pikachu", "snorlax", "charizard", "blastoise",
         "venusaur", "lucario", "gengar", "garchomp", "greninja", "scizor",
     }
     needs_conversion = not model_path.exists() or model_path.stat().st_size == 0
-    if model_path.exists() and not preserve_existing:
+    if not preserve_existing and previous_source != SOURCE_COMMIT:
+        needs_conversion = true
+    if model_path.exists() and not preserve_existing and not needs_conversion:
         try:
             with gzip.open(model_path, "rt", encoding="utf-8") as stream:
                 existing_model = json.load(stream)
             needs_conversion = int(existing_model.get("converter_version", 0)) < CONVERTER_VERSION
         except (OSError, EOFError, json.JSONDecodeError, AttributeError, TypeError, ValueError):
             needs_conversion = True
+    model_source = item["model"]
+    animation_source = item["animations"]
+    texture_source = item["texture"]
+    shiny_source = item["shiny_texture"]
+
     if needs_conversion:
-        geometry_bytes = fetch_bytes(raw_base + item["model"])
-        animation_bytes = fetch_bytes(raw_base + item["animations"])
+        model_source, geometry_bytes = resolve_source_asset(item, raw_base, "model", SOURCE_COMMIT)
+        animation_source, animation_bytes = resolve_source_asset(item, raw_base, "animations", SOURCE_COMMIT)
         geometry = json.loads(geometry_bytes.decode("utf-8"))
         animations = json.loads(animation_bytes.decode("utf-8"))
         model = convert_geometry(geometry, animations)
         packed = json.dumps(model, separators=(",",":"), ensure_ascii=False).encode("utf-8")
         model_path.write_bytes(gzip.compress(packed, compresslevel=9))
 
-    # Update textures together with the model when the source revision changes.
-    source_marker = target_dir / "import_source.txt"
-    previous_source = source_marker.read_text(encoding="utf-8").strip() if source_marker.exists() else ""
+    # Refresh textures when the upstream source changes. The resolver handles default
+    # male/female filenames and the source's renamed texture files.
     if not preserve_existing and previous_source != SOURCE_COMMIT:
-        normal_path.write_bytes(fetch_bytes(raw_base + item["texture"]))
-        shiny_path.write_bytes(fetch_bytes(raw_base + item["shiny_texture"]))
-        for texture_path in (normal_path, shiny_path):
-            with texture_path.open("rb") as stream:
-                if stream.read(8) != bytes((137, 80, 78, 71, 13, 10, 26, 10)):
-                    raise RuntimeError(f"Downloaded texture is not a valid PNG: {texture_path}")
+        texture_source, normal_bytes = resolve_source_asset(item, raw_base, "texture", SOURCE_COMMIT)
+        shiny_source, shiny_bytes = resolve_source_asset(item, raw_base, "shiny_texture", SOURCE_COMMIT)
+        normal_path.write_bytes(normal_bytes)
+        shiny_path.write_bytes(shiny_bytes)
     else:
-        download_if_missing(normal_path, raw_base + item["texture"])
-        download_if_missing(shiny_path, raw_base + item["shiny_texture"])
+        if not normal_path.exists() or normal_path.stat().st_size < 24:
+            texture_source, normal_bytes = resolve_source_asset(item, raw_base, "texture", SOURCE_COMMIT)
+            normal_path.write_bytes(normal_bytes)
+        if not shiny_path.exists() or shiny_path.stat().st_size < 24:
+            shiny_source, shiny_bytes = resolve_source_asset(item, raw_base, "shiny_texture", SOURCE_COMMIT)
+            shiny_path.write_bytes(shiny_bytes)
+
+    for texture_path in (normal_path, shiny_path):
+        with texture_path.open("rb") as stream:
+            if stream.read(8) != bytes((137, 80, 78, 71, 13, 10, 26, 10)):
+                raise RuntimeError(f"Downloaded texture is not a valid PNG: {texture_path}")
     if not preserve_existing:
-        source_marker.write_text(SOURCE_COMMIT + "\\n", encoding="utf-8")
+        source_marker.write_text(SOURCE_COMMIT + "\n", encoding="utf-8")
 
     attribution = (
         f"{species_data['name']} model, animation and textures\n"
         f"Source: Cable/Cobblemon on GitLab, ref {SOURCE_COMMIT}.\n"
-        f"Model: {item['model']}\n"
-        f"Animations: {item['animations']}\n"
-        f"Texture: {item['texture']}\n"
-        f"Shiny texture: {item['shiny_texture']}\n"
+        f"Model: {model_source}\n"
+        f"Animations: {animation_source}\n"
+        f"Texture: {texture_source}\n"
+        f"Shiny texture: {shiny_source}\n"
         "Conversion: Bedrock geometry and animation JSON converted to PokeBrawl's runtime model format.\n"
         "License: Creative Commons Attribution-NonCommercial 3.0 Unported. See game/pokemon/LICENSE-models.txt.\n"
         "Pokémon and Cobblemon are the property of their respective rights holders; this project is not affiliated with them.\n"

@@ -26,27 +26,6 @@ def list_gitlab_directory(path: str) -> list[dict]:
         return json.loads(response.read().decode("utf-8"))
 
 
-print("--- Current GitLab species metadata directory ---")
-try:
-    species_files = list_gitlab_directory("common/src/main/resources/data/cobblemon/species/generation1")
-    print(", ".join(x["name"] for x in species_files[:30]))
-except Exception as exc:
-    print("Species metadata directory unavailable:", repr(exc))
-
-for folder in ["0001_bulbasaur", "0024_arbok", "0026_raichu", "0016_pidgey"]:
-    print(f"--- Current GitLab files: {folder} ---")
-    for asset_root in [
-        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models",
-        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations",
-        "common/src/main/resources/assets/cobblemon/textures/pokemon",
-    ]:
-        files = list_gitlab_directory(asset_root + "/" + folder)
-        print(asset_root.split("/")[-1] + ": " + ", ".join(x["name"] for x in files))
-
-
-SAMPLES = ["bulbasaur", "pikachu", "pidgey", "gengar", "charizard"]
-
-
 def has_motion(clip: dict) -> bool:
     for channels in clip.get("bones", {}).values():
         for values in channels.values():
@@ -61,8 +40,14 @@ def has_motion(clip: dict) -> bool:
 
 for species_id in SAMPLES:
     item = items[species_id]
-    geometry = converter.fetch_json(base, item["model"])
-    animations = converter.fetch_json(base, item["animations"])
+    model_path, geometry_bytes = converter.resolve_source_asset(item, base, "model", source_ref)
+    animation_path, animation_bytes = converter.resolve_source_asset(item, base, "animations", source_ref)
+    texture_path, texture_bytes = converter.resolve_source_asset(item, base, "texture", source_ref)
+    shiny_path, shiny_bytes = converter.resolve_source_asset(item, base, "shiny_texture", source_ref)
+    geometry = json.loads(geometry_bytes.decode("utf-8"))
+    animations = json.loads(animation_bytes.decode("utf-8"))
+    assert texture_bytes[:8] == bytes((137, 80, 78, 71, 13, 10, 26, 10)), texture_path
+    assert shiny_bytes[:8] == bytes((137, 80, 78, 71, 13, 10, 26, 10)), shiny_path
     model = converter.convert_geometry(geometry, animations)
 
     assert model["converter_version"] == converter.CONVERTER_VERSION, species_id
@@ -84,7 +69,7 @@ for species_id in SAMPLES:
     assert has_motion(clips["ground_idle"]), (species_id, "ground_idle has no movement")
     assert has_motion(clips["ground_walk"]), (species_id, "ground_walk has no movement")
     print(
-        f"OK {species_id}: {len(model['bones'])} bones, "
+        f"OK {species_id}: {model_path} | {len(model['bones'])} bones, "
         f"{vertices} vertices, {len(clips)} clips"
     )
 
