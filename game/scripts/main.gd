@@ -158,6 +158,8 @@ func set_stage(stage_id: String) -> void:
 	add_child(arena)
 	move_child(arena, 0)
 	arena.build()
+	if options:
+		options.apply_graphics_quality()
 	_put_trainers()
 	if hud and fighters.size() == 2:
 		portraits(fighters[0].species, fighters[1].species)
