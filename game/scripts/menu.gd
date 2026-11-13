@@ -915,8 +915,9 @@ func render(slot: String, sp: String, px: Vector2i, turn := 0.45) -> Texture2D:
 		var vp := SubViewport.new()
 		vp.own_world_3d = true
 		vp.transparent_bg = true
-		vp.msaa_3d = Viewport.MSAA_4X
-		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		vp.msaa_3d = Viewport.MSAA_DISABLED
+		# Only render this preview while its texture is actually visible.
+		vp.render_target_update_mode = SubViewport.UPDATE_WHEN_VISIBLE
 		add_child(vp)
 		r = {"vp": vp, "model": null, "species": "", "turn": turn}
 		_renders[slot] = r
@@ -951,8 +952,8 @@ func _generate_portraits() -> void:
 		vp.own_world_3d = true
 		vp.transparent_bg = true
 		vp.size = Vector2i(128, 128)
-		vp.msaa_3d = Viewport.MSAA_4X
-		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		vp.msaa_3d = Viewport.MSAA_DISABLED
+		# Portraits are captured once below; no need to keep rendering them.
 		add_child(vp)
 		var data := _setup_portrait(vp, sp, 0.5)
 		# Wait for the animation to place the skeleton: before that, the locators are in
