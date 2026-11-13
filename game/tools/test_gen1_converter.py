@@ -26,6 +26,13 @@ def list_gitlab_directory(path: str) -> list[dict]:
         return json.loads(response.read().decode("utf-8"))
 
 
+print("--- Current GitLab species metadata directory ---")
+try:
+    species_files = list_gitlab_directory("common/src/main/resources/data/cobblemon/species/generation1")
+    print(", ".join(x["name"] for x in species_files[:30]))
+except Exception as exc:
+    print("Species metadata directory unavailable:", repr(exc))
+
 for folder in ["0001_bulbasaur", "0024_arbok", "0026_raichu", "0016_pidgey"]:
     print(f"--- Current GitLab files: {folder} ---")
     for asset_root in [
