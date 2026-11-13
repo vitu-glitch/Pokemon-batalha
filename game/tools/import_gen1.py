@@ -26,7 +26,7 @@ ROOT = Path(__file__).resolve().parents[1]
 POKEMON_DIR = ROOT / "pokemon"
 MANIFEST_PATH = POKEMON_DIR / "gen1_manifest.json"
 SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
-FPS = 24
+FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
 CONVERTER_VERSION = 3
@@ -541,13 +541,13 @@ def download_if_missing(target, url):
         try:
             with target.open("rb") as stream:
                 header = stream.read(24)
-            valid_png = header[:8] == b"\\x89PNG\\r\\n\\x1a\\n"
+            valid_png = header[:8] == bytes((137, 80, 78, 71, 13, 10, 26, 10))
         except OSError:
             valid_png = False
     if not valid_png:
         target.write_bytes(fetch_bytes(url))
     with target.open("rb") as stream:
-        if stream.read(8) != b"\\x89PNG\\r\\n\\x1a\\n":
+        if stream.read(8) != bytes((137, 80, 78, 71, 13, 10, 26, 10)):
             raise RuntimeError(f"Downloaded texture is not a valid PNG: {target}")
 
 
