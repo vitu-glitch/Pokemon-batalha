@@ -21,7 +21,7 @@ var music := 0.5
 var sfx := 1.0
 var fullscreen := true
 var vsync := true
-var fps_cap := 0
+var fps_cap := 60
 # Performance is the default so the game starts comfortably on older computers.
 var graphics_quality := "performance"
 var language := ""
