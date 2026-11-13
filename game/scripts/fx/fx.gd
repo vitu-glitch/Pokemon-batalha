@@ -18,9 +18,9 @@ const SEQUENCES := "res://fx/sequences/"
 ## Conservative battle-effect limits for lower-end CPUs. Every particle is updated
 ## in GDScript each frame, so keeping this bounded prevents large move combos from
 ## overwhelming the main thread. Low-priority effects yield first.
-const MAX_EMITTERS := 64
-const BUDGET := 96
-const BUDGET_LOW := 48
+const MAX_EMITTERS := 120
+const BUDGET := 320
+const BUDGET_LOW := 160
 
 static var _defs := {}
 static var _sequences := {}
@@ -100,7 +100,14 @@ func clear() -> void:
 ## Launches a piece. `target` is the point it "looks at" (if any).
 func play(id: String, pos: Vector3, target = null, opts := {}) -> Dictionary:
 	var d := load_def(id)
-	if d.is_empty() or _emitters.size() >= MAX_EMITTERS:
+	var emitter_limit := MAX_EMITTERS
+	if main != null and main.options != null:
+		match main.options.graphics_quality:
+			"performance":
+				emitter_limit = 64
+			"balanced":
+				emitter_limit = 90
+	if d.is_empty() or _emitters.size() >= emitter_limit:
 		return {}
 	var basis: Basis = opts.get("basis", Basis.IDENTITY)
 	var vars := {"emitter_age": 0.0, "emitter_lifetime": 1.0, "entity_height": opts.get("height", 1.0),
@@ -288,6 +295,12 @@ func _spawn_n(em: Dictionary, n: int) -> void:
 
 func _spawn(em: Dictionary) -> void:
 	var cap := BUDGET_LOW if em.low else BUDGET
+	if main != null and main.options != null:
+		match main.options.graphics_quality:
+			"performance":
+				cap = 48 if em.low else 96
+			"balanced":
+				cap = 112 if em.low else 224
 	if _alive >= cap:
 		return
 	_alive += 1
