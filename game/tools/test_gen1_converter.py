@@ -2,8 +2,11 @@
 """Small source-asset regression test for the Gen 1 Bedrock converter."""
 from __future__ import annotations
 
+import gzip
 import json
+import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 import import_gen1 as converter
 
@@ -98,6 +101,91 @@ def has_motion(clip: dict) -> bool:
 # The in-game neutral pose must prefer ground_idle over battle_idle guard poses.
 fighter_source = (ROOT / "scripts" / "fighter.gd").read_text(encoding="utf-8")
 assert 'var a := "ground_idle" if model.has_anim("ground_idle") else "battle_idle"' in fighter_source
+
+
+# End-to-end smoke test for process_one(): catches errors that a pure geometry
+# conversion test cannot see (directory writes, source marker, textures, gzip).
+def test_process_one_smoke():
+    png_signature = bytes((137, 80, 78, 71, 13, 10, 26, 10))
+    png_bytes = png_signature + bytes(16)
+    geometry = {
+        "minecraft:geometry": [{
+            "description": {"texture_width": 64, "texture_height": 64},
+            "bones": [{
+                "name": "root",
+                "pivot": [0, 0, 0],
+                "cubes": [{"origin": [0, 0, 0], "size": [4, 4, 4], "uv": [0, 0]}],
+            }],
+        }]
+    }
+    animations = {
+        "animations": {
+            "animation.converter_smoke_test.ground_idle": {
+                "loop": True,
+                "bones": {"root": {"rotation": [0, 0, 0]}},
+            },
+            "animation.converter_smoke_test.ground_walk": {
+                "loop": True,
+                "bones": {"root": {"rotation": {
+                    "0.0": [0, 0, 0], "0.5": [10, 0, 0], "1.0": [0, 0, 0]
+                }}},
+            },
+        }
+    }
+    metadata = {
+        "nationalPokedexNumber": 152,
+        "name": "Converter Smoke Test",
+        "primaryType": "normal",
+        "baseStats": {
+            "hp": 50, "attack": 50, "defence": 50,
+            "special_attack": 50, "special_defence": 50, "speed": 50,
+        },
+        "height": 10,
+        "weight": 100,
+        "abilities": [],
+        "moves": [],
+    }
+    source_payloads = {
+        "model": json.dumps(geometry).encode("utf-8"),
+        "animations": json.dumps(animations).encode("utf-8"),
+        "texture": png_bytes,
+        "shiny_texture": png_bytes,
+    }
+
+    def fake_resolve(item, raw_base, asset_key, source_ref):
+        return f"smoke/{asset_key}", source_payloads[asset_key]
+
+    item = {
+        "dex": 152,
+        "id": "converter_smoke_test",
+        "folder": "converter_smoke_test",
+        "model": "smoke.geo.json",
+        "animations": "smoke.animation.json",
+        "texture": "smoke.png",
+        "shiny_texture": "smoke_shiny.png",
+    }
+    with tempfile.TemporaryDirectory() as temp:
+        temp_dir = Path(temp)
+        with (
+            patch.object(converter, "POKEMON_DIR", temp_dir),
+            patch.object(converter, "SOURCE_COMMIT", "test-source", create=True),
+            patch.object(converter, "fetch_json", return_value=metadata),
+            patch.object(converter, "resolve_source_asset", side_effect=fake_resolve),
+        ):
+            species_id, species_data, stats = converter.process_one(item, "")
+            pokemon_dir = temp_dir / species_id
+            model_path = pokemon_dir / "model.json.gz"
+            with gzip.open(model_path, "rt", encoding="utf-8") as stream:
+                converted = json.load(stream)
+            assert converted["converter_version"] == converter.CONVERTER_VERSION
+            assert stats["bones"] == 1 and stats["vertices"] > 0
+            assert stats["walk_motion"] is True
+            assert (pokemon_dir / "import_source.txt").read_text(encoding="utf-8").strip() == "test-source"
+            assert (pokemon_dir / "texture.png").read_bytes()[:8] == png_signature
+            assert (pokemon_dir / "texture_shiny.png").read_bytes()[:8] == png_signature
+
+
+test_process_one_smoke()
 
 for species_id in SAMPLES:
     item = items[species_id]
