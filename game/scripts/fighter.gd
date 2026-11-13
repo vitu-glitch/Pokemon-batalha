@@ -1661,7 +1661,10 @@ func _find_feet() -> void:
 
 
 func _animate_base(fade: float) -> void:
-	var a := "battle_idle" if model.has_anim("battle_idle") else "ground_idle"
+	# Prefer the neutral standing pose. "battle_idle" can be a species-specific
+	# guard/attack stance (and may lean or rotate the whole body), so it must not
+	# override the normal ground pose just because the clip exists.
+	var a := "ground_idle" if model.has_anim("ground_idle") else "battle_idle"
 	if data.get("levitates", false) and model.has_anim("air_idle"):
 		a = "air_idle"
 	if flying and model.has_anim("air_idle"):
