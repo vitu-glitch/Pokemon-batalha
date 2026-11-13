@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 manifest = json.loads((ROOT / "pokemon" / "gen1_manifest.json").read_text(encoding="utf-8"))
 source_ref = manifest.get("source_branch", "main")
 base = f"https://gitlab.com/cable-mc/cobblemon/-/raw/{source_ref}/"
+metadata_base = converter.METADATA_RAW_BASE
 items = sorted(manifest["pokemon"], key=lambda item: int(item["dex"]))
 EXPECTED = 151
 PNG_SIGNATURE = bytes((137, 80, 78, 71, 13, 10, 26, 10))
@@ -36,7 +37,7 @@ def validate_one(item: dict) -> dict:
         "common/src/main/resources/data/cobblemon/species/"
         f"generation1/{species_id}.json"
     )
-    metadata = converter.fetch_json(base, metadata_path)
+    metadata = converter.fetch_json(metadata_base, metadata_path)
     if int(metadata.get("nationalPokedexNumber", -1)) != dex:
         raise RuntimeError(f"{species_id}: species metadata has wrong Pokédex number")
 
@@ -144,7 +145,7 @@ if len(items) != EXPECTED:
 
 failures = []
 reports = []
-with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
     futures = {pool.submit(validate_one, item): item for item in items}
     for future in concurrent.futures.as_completed(futures):
         item = futures[future]

@@ -32,6 +32,11 @@ ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
 CONVERTER_VERSION = 8
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
+METADATA_SOURCE_COMMIT = "75bb1a6c2fe92ef54951fb68d16d21f290a9ee88"
+METADATA_RAW_BASE = (
+    "https://raw.githubusercontent.com/Cobblemon-Global/Cobblemon/"
+    + METADATA_SOURCE_COMMIT + "/"
+)
 
 # Corner order produces outward normals; triangle indices are reversed below
 # because Godot's ArrayMesh uses clockwise winding for front faces.
@@ -57,7 +62,7 @@ FACES = {
 }
 
 
-def fetch_bytes(url: str, attempts: int = 5) -> bytes:
+def fetch_bytes(url: str, attempts: int = 8) -> bytes:
     last = None
     for attempt in range(attempts):
         try:
@@ -68,10 +73,15 @@ def fetch_bytes(url: str, attempts: int = 5) -> bytes:
             if exc.code == 404:
                 raise RuntimeError(f"HTTP Error 404: {url}") from exc
             last = exc
-            time.sleep(min(2 ** attempt, 10))
+            retry_after = exc.headers.get("Retry-After") if exc.headers else None
+            try:
+                delay = float(retry_after) if retry_after else min(3.0 * (2 ** attempt), 60.0)
+            except (TypeError, ValueError):
+                delay = min(3.0 * (2 ** attempt), 60.0)
+            time.sleep(max(1.0, delay))
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             last = exc
-            time.sleep(min(2 ** attempt, 10))
+            time.sleep(min(2 ** attempt, 20))
     raise RuntimeError(f"Download failed: {url}\n{last}")
 
 
@@ -95,7 +105,7 @@ def gitlab_directory_names(directory: str, source_ref: str) -> list[str]:
         "ref": source_ref,
         "per_page": 100,
     })
-    payload = json.loads(fetch_bytes(GITLAB_TREE_API + "?" + query, attempts=3).decode("utf-8"))
+    payload = json.loads(fetch_bytes(GITLAB_TREE_API + "?" + query, attempts=8).decode("utf-8"))
     names = sorted(
         entry["name"] for entry in payload
         if isinstance(entry, dict) and entry.get("type") == "blob" and "name" in entry
@@ -739,7 +749,7 @@ def process_one(item, raw_base):
     target_dir = POKEMON_DIR / species_id
     target_dir.mkdir(parents=True, exist_ok=True)
     species_source = f"common/src/main/resources/data/cobblemon/species/generation1/{species_id}.json"
-    metadata = fetch_json(raw_base, species_source)
+    metadata = fetch_json(METADATA_RAW_BASE, species_source)
     species_data = convert_species(metadata)
 
     model_path = target_dir / "model.json.gz"
@@ -756,7 +766,7 @@ def process_one(item, raw_base):
     }
     needs_conversion = not model_path.exists() or model_path.stat().st_size == 0
     if not preserve_existing and previous_source != SOURCE_COMMIT:
-        needs_conversion = true
+        needs_conversion = True
     if model_path.exists() and not preserve_existing and not needs_conversion:
         try:
             with gzip.open(model_path, "rt", encoding="utf-8") as stream:
@@ -874,7 +884,7 @@ def main():
     failures = []
     new_models = 0
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
         future_map = {pool.submit(process_one,item,raw_base):item for item in items}
         for future in concurrent.futures.as_completed(future_map):
             item = future_map[future]
