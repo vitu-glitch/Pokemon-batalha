@@ -26,6 +26,7 @@ if errorlevel 1 (
 ) else (
     echo.
     echo Importacao concluida. Abra a pasta game no Godot.
+    echo Relatorio: game\pokemon\gen1_import_report.txt
 )
 echo.
 pause
