@@ -7,6 +7,7 @@ on:
     paths:
       - "game/tools/import_gen1.py"
       - "game/tools/test_gen1_converter.py"
+      - "game/tools/test_gen1_all_assets.py"
       - "game/pokemon/gen1_manifest.json"
       - ".github/workflows/gen1-import-check.yml"
   workflow_dispatch:
@@ -24,3 +25,5 @@ jobs:
         working-directory: .
       - name: Test converted source models
         run: python game/tools/test_gen1_converter.py
+      - name: Validate every Gen 1 asset and model
+        run: python game/tools/test_gen1_all_assets.py
