@@ -993,11 +993,12 @@ func _generate_portraits(page: int) -> void:
 		vp.msaa_3d = Viewport.MSAA_DISABLED
 		# Render a single thumbnail frame, then stop this viewport. Re-rendering
 		# every portrait every frame caused severe stalls on low-end PCs.
-		vp.render_target_update_mode = SubViewport.UPDATE_ONCE
+		vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		add_child(vp)
-		var data := _setup_portrait(vp, sp, 0.5)
-		_frame_portrait(data)
+		var data := _setup_portrait(vp, sp, 0.5, true)
 		await get_tree().process_frame
+		_frame_portrait(data)
+		vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 		await RenderingServer.frame_post_draw
 		if DisplayServer.get_name() != "headless":
 			var img := vp.get_texture().get_image()
@@ -1008,9 +1009,9 @@ func _generate_portraits(page: int) -> void:
 	_generating = false
 
 
-func _setup_portrait(vp: SubViewport, sp: String, turn: float) -> Dictionary:
+func _setup_portrait(vp: SubViewport, sp: String, turn: float, static_preview := false) -> Dictionary:
 	var m := PokeModel.new()
-	m.setup(sp)
+	m.setup(sp, false, static_preview)
 	var box: AABB = m._res.mesh.get_aabb()
 	m.scale = Vector3.ONE * Roster.POKEMON[sp].height / maxf(box.size.y, 0.05)
 	m.rotation.y = PI + turn

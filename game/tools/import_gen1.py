@@ -26,8 +26,10 @@ ROOT = Path(__file__).resolve().parents[1]
 POKEMON_DIR = ROOT / "pokemon"
 MANIFEST_PATH = POKEMON_DIR / "gen1_manifest.json"
 SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
-FPS = 15
-CONVERTER_VERSION = 2
+FPS = 24
+ANIM_DEFAULT_LOOP_LENGTH = 4.0
+MAX_ANIMATION_FRAMES = 480
+CONVERTER_VERSION = 3
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 
 # Corner order produces outward normals; triangle indices are reversed below
@@ -226,7 +228,9 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
             # Give those planes a little physical thickness, but render only their two
             # broad faces. The four artificial edge faces have no valid texture area.
             flat_axes = [axis for axis, extent in enumerate(source_size) if extent <= 1e-5]
-            if len(flat_axes) == 3:
+            if len(flat_axes) >= 2:
+                # A line has no textured surface area. Expanding two zero axes
+                # fabricates four faces with undefined UVs and creates black spikes.
                 continue
             for axis in flat_axes:
                 if hi[axis] - lo[axis] < 0.02:
@@ -243,7 +247,7 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
             inv_bone = transpose(world_basis)
 
             for face, (make_corners, _, _) in FACES.items():
-                if len(flat_axes) == 1 and FACE_NORMAL_AXIS[face] != flat_axes[0]:
+                if flat_axes and FACE_NORMAL_AXIS[face] != flat_axes[0]:
                     continue
                 corners = make_corners(x0,y0,z0,x1,y1,z1)
                 uv_points = face_uvs(cube, face, uv_dims, tex_w, tex_h)
@@ -425,10 +429,17 @@ def convert_animations(animation_json):
         if not isinstance(animation, dict):
             continue
         name = full_name.split(".")[-1]
-        length = max(float(animation.get("animation_length", 1.0) or 1.0), 1.0/FPS)
-        frames = max(2, min(900, int(math.ceil(length*FPS))+1))
+        if name in {"render", "pose"}:
+            # These are showcase-only poses, never used by the battle controller.
+            continue
         loop_raw = animation.get("loop", False)
         loop = loop_raw is True or str(loop_raw).lower() == "true"
+        declared_length = animation.get("animation_length")
+        # Bedrock omits animation_length on many cyclic Molang animations. A
+        # one-second guess truncates slow idle cycles and makes them snap back.
+        default_length = ANIM_DEFAULT_LOOP_LENGTH if loop else 1.0
+        length = max(float(declared_length if declared_length is not None else default_length) or default_length, 1.0/FPS)
+        frames = max(2, min(MAX_ANIMATION_FRAMES, int(math.ceil(length*FPS))+1))
         query = {
             "ground_speed": 1 if ("walk" in name or "run" in name) else 0,
             "is_moving": 1 if ("walk" in name or "run" in name) else 0,
@@ -525,8 +536,19 @@ def convert_species(source):
 
 def download_if_missing(target, url):
     target.parent.mkdir(parents=True, exist_ok=True)
-    if not target.exists() or target.stat().st_size == 0:
+    valid_png = False
+    if target.exists() and target.stat().st_size >= 24:
+        try:
+            with target.open("rb") as stream:
+                header = stream.read(24)
+            valid_png = header[:8] == b"\\x89PNG\\r\\n\\x1a\\n"
+        except OSError:
+            valid_png = False
+    if not valid_png:
         target.write_bytes(fetch_bytes(url))
+    with target.open("rb") as stream:
+        if stream.read(8) != b"\\x89PNG\\r\\n\\x1a\\n":
+            raise RuntimeError(f"Downloaded texture is not a valid PNG: {target}")
 
 
 def process_one(item, raw_base):
@@ -579,7 +601,34 @@ def process_one(item, raw_base):
         "Pokémon and Cobblemon are the property of their respective rights holders; this project is not affiliated with them.\n"
     )
     (target_dir / "ATTRIBUTION.txt").write_text(attribution, encoding="utf-8")
-    return species_id, species_data, not model_path.exists()
+    with gzip.open(model_path, "rt", encoding="utf-8") as stream:
+        converted = json.load(stream)
+    bones = converted.get("bones", [])
+    if not bones:
+        raise RuntimeError(f"Converted model has no bones: {species_id}")
+    vertex_count = 0
+    for bone in bones:
+        verts = bone.get("verts", [])
+        normals = bone.get("normals", [])
+        uvs = bone.get("uvs", [])
+        if len(verts) != len(normals) or len(verts) * 2 != len(uvs) * 3:
+            raise RuntimeError(f"Broken vertex/normal/UV arrays in {species_id}/{bone.get('name')}")
+        if len(verts) % 9:
+            raise RuntimeError(f"Triangle data is incomplete in {species_id}/{bone.get('name')}")
+        vertex_count += len(verts) // 3
+    animations_out = converted.get("anims", {})
+    if "ground_idle" not in animations_out or "ground_walk" not in animations_out:
+        raise RuntimeError(f"Missing required movement animations in {species_id}")
+    for clip_name, clip in animations_out.items():
+        for bone_name, channels in clip.get("bones", {}).items():
+            for channel_name, values in channels.items():
+                if len(values) % 3:
+                    raise RuntimeError(f"Invalid {clip_name}/{bone_name}/{channel_name} track in {species_id}")
+    return species_id, species_data, {
+        "bones": len(bones),
+        "clips": len(animations_out),
+        "vertices": vertex_count,
+    }
 
 
 def main():
@@ -604,9 +653,11 @@ def main():
         for future in concurrent.futures.as_completed(future_map):
             item = future_map[future]
             try:
-                species_id, data, _ = future.result()
+                species_id, data, stats = future.result()
                 species_records[species_id] = data
-                print(f"[{data['dex']:03d}/151] {data['name']} imported")
+                print(f"[{data['dex']:03d}/151] {data['name']} imported "
+                      f"({stats['bones']} bones, {stats['clips']} animations, "
+                      f"{stats['vertices']} vertices)")
             except Exception as exc:
                 failures.append((item["id"],str(exc)))
                 print(f"[ERROR] {item['id']}: {exc}",file=sys.stderr)

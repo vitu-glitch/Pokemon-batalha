@@ -51,9 +51,9 @@ var extra_scale: Dictionary:
 var _res: Dictionary
 
 
-func setup(species: String, shiny := false) -> void:
+func setup(species: String, shiny := false, preview := false) -> void:
 	species_id = species
-	_res = _load(species)
+	_res = _load(species, not preview)
 	skel = Skeleton3D.new()
 	skel.name = "Skeleton3D"
 	for b in _res.bones:
@@ -94,11 +94,12 @@ func setup(species: String, shiny := false) -> void:
 	layer.speed_scale = speed
 
 
-static func _load(species: String) -> Dictionary:
-	if _cache.has(species):
-		_cache_order.erase(species)
-		_cache_order.append(species)
-		return _cache[species]
+static func _load(species: String, include_animations := true) -> Dictionary:
+	var cache_key := species + ("|full" if include_animations else "|preview")
+	if _cache.has(cache_key):
+		_cache_order.erase(cache_key)
+		_cache_order.append(cache_key)
+		return _cache[cache_key]
 	var dir := "res://pokemon/%s/" % species
 	var raw := FileAccess.get_file_as_bytes(dir + "model.json.gz").decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
 	var data: Dictionary = JSON.parse_string(raw.get_string_from_utf8())
@@ -167,122 +168,123 @@ static func _load(species: String) -> Dictionary:
 	# Animations: position, rotation and scale tracks per bone.
 	var lib := AnimationLibrary.new()
 	var layer_lib := AnimationLibrary.new()
-	var animated := {}
-	for anim_name in data.anims:
-		var a: Dictionary = data.anims[anim_name]
-		var an := Animation.new()
-		an.length = maxf(float(a.len), 1.0 / fps)
-		an.loop_mode = Animation.LOOP_LINEAR if a.loop else Animation.LOOP_NONE
-		for bone in a.bones:
-			if not index.has(bone):
-				continue
-			animated[bone] = true
-			var channels: Dictionary = a.bones[bone]
-			var file_path := NodePath("Skeleton3D:" + bone)
-			if channels.has("pos"):
-				var t := an.add_track(Animation.TYPE_POSITION_3D)
-				an.track_set_path(t, file_path)
-				var arr: Array = channels.pos
-				for i in arr.size() / 3:
-					var p := Vector3(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2])
-					an.position_track_insert_key(t, i / fps, (rest_pos[bone] + p) * PX)
-			if channels.has("rot"):
-				var t := an.add_track(Animation.TYPE_ROTATION_3D)
-				an.track_set_path(t, file_path)
-				var arr: Array = channels.rot
-				for i in arr.size() / 3:
-					var r := Vector3(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2])
-					an.rotation_track_insert_key(t, i / fps, euler_zyx(rest_rot[bone] + r).get_rotation_quaternion())
-			if channels.has("scl"):
-				var t := an.add_track(Animation.TYPE_SCALE_3D)
-				an.track_set_path(t, file_path)
-				var arr: Array = channels.scl
-				for i in arr.size() / 3:
-					an.scale_track_insert_key(t, i / fps, Vector3(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2]))
-		lib.add_animation(anim_name, an)
-		# Faint stays on its last pose: it goes on the base, which holds it.
-		if not a.loop and not anim_name in ["blink", "faint", "sleep_intro"]:
-			layer_lib.add_animation(anim_name, an.duplicate(true))
-	# On the base layer, each animation also carries the bones it does not move, in the
-	# idle pose (the way Cobblemon composes: Snorlax's walk moves the legs and the idle
-	# sets the arms). That way the base always writes the whole body and nothing stays
-	# frozen in an earlier pose. What not even the idle moves, at rest. Never the bare
-	# rest pose: in these models it is the T-pose.
-	var channels := {}
-	for anim_name in data.anims:
-		var bs: Dictionary = data.anims[anim_name].bones
-		for bone in bs:
-			if index.has(bone):
-				if not channels.has(bone):
-					channels[bone] = {}
-				for c in bs[bone]:
-					channels[bone][c] = true
-	# Idle pose: the first frame of ground_idle, completed with battle_idle.
-	# The normal one first: the battle one may be in a guard stance (Lucario turns its
-	# body 32°) and walking or running would inherit that turn.
-	var waits := {}
-	for ref in ["ground_idle", "battle_idle"]:
-		if not lib.has_animation(ref):
-			continue
-		var ra: Animation = lib.get_animation(ref)
-		for k in ra.get_track_count():
-			var key := "%s|%d" % [ra.track_get_path(k), ra.track_get_type(k)]
-			if waits.has(key):
-				continue
-			match ra.track_get_type(k):
-				Animation.TYPE_POSITION_3D:
-					waits[key] = ra.position_track_interpolate(k, 0.0)
-				Animation.TYPE_ROTATION_3D:
-					waits[key] = ra.rotation_track_interpolate(k, 0.0)
-				Animation.TYPE_SCALE_3D:
-					waits[key] = ra.scale_track_interpolate(k, 0.0)
-	for anim_name in data.anims:
-		if anim_name == "blink" or layer_lib.has_animation(anim_name):
-			continue
-		var an: Animation = lib.get_animation(anim_name)
-		var own: Dictionary = data.anims[anim_name].bones
-		for bone in channels:
-			var file_path := NodePath("Skeleton3D:" + bone)
-			var has: Dictionary = own.get(bone, {})
-			if channels[bone].has("pos") and not has.has("pos"):
-				var t := an.add_track(Animation.TYPE_POSITION_3D)
-				an.track_set_path(t, file_path)
-				an.position_track_insert_key(t, 0.0, waits.get("%s|%d" % [file_path, Animation.TYPE_POSITION_3D], rest_pos[bone] * PX))
-			if channels[bone].has("rot") and not has.has("rot"):
-				var t := an.add_track(Animation.TYPE_ROTATION_3D)
-				an.track_set_path(t, file_path)
-				an.rotation_track_insert_key(t, 0.0, waits.get("%s|%d" % [file_path, Animation.TYPE_ROTATION_3D], euler_zyx(rest_rot[bone]).get_rotation_quaternion()))
-			if channels[bone].has("scl") and not has.has("scl"):
-				var t := an.add_track(Animation.TYPE_SCALE_3D)
-				an.track_set_path(t, file_path)
-				an.scale_track_insert_key(t, 0.0, waits.get("%s|%d" % [file_path, Animation.TYPE_SCALE_3D], Vector3.ONE))
-	# RESET: the rest of every animated bone, so blending goes back to it.
-	var reset := Animation.new()
-	reset.length = 0.001
-	for bone in animated:
-		var file_path := NodePath("Skeleton3D:" + bone)
-		var t := reset.add_track(Animation.TYPE_POSITION_3D)
-		reset.track_set_path(t, file_path)
-		reset.position_track_insert_key(t, 0.0, rest_pos[bone] * PX)
-		t = reset.add_track(Animation.TYPE_ROTATION_3D)
-		reset.track_set_path(t, file_path)
-		reset.rotation_track_insert_key(t, 0.0, euler_zyx(rest_rot[bone]).get_rotation_quaternion())
-		t = reset.add_track(Animation.TYPE_SCALE_3D)
-		reset.track_set_path(t, file_path)
-		reset.scale_track_insert_key(t, 0.0, Vector3.ONE)
-	lib.add_animation("RESET", reset)
-
-	# Blinking goes separately, as an additive layer (applied by PokeExtras).
 	var blink := {}
-	if data.anims.has("blink"):
-		var bl: Dictionary = data.anims.blink
-		for bone in bl.bones:
-			var c := {}
-			for channel in bl.bones[bone]:
-				c[channel] = PackedFloat32Array(bl.bones[bone][channel])
-			blink[bone] = c
-		blink["_len"] = float(bl.len)
-
+	if include_animations:
+		var animated := {}
+		for anim_name in data.anims:
+			var a: Dictionary = data.anims[anim_name]
+			var an := Animation.new()
+			an.length = maxf(float(a.len), 1.0 / fps)
+			an.loop_mode = Animation.LOOP_LINEAR if a.loop else Animation.LOOP_NONE
+			for bone in a.bones:
+				if not index.has(bone):
+					continue
+				animated[bone] = true
+				var channels: Dictionary = a.bones[bone]
+				var file_path := NodePath("Skeleton3D:" + bone)
+				if channels.has("pos"):
+					var t := an.add_track(Animation.TYPE_POSITION_3D)
+					an.track_set_path(t, file_path)
+					var arr: Array = channels.pos
+					for i in arr.size() / 3:
+						var p := Vector3(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2])
+						an.position_track_insert_key(t, i / fps, (rest_pos[bone] + p) * PX)
+				if channels.has("rot"):
+					var t := an.add_track(Animation.TYPE_ROTATION_3D)
+					an.track_set_path(t, file_path)
+					var arr: Array = channels.rot
+					for i in arr.size() / 3:
+						var r := Vector3(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2])
+						an.rotation_track_insert_key(t, i / fps, euler_zyx(rest_rot[bone] + r).get_rotation_quaternion())
+				if channels.has("scl"):
+					var t := an.add_track(Animation.TYPE_SCALE_3D)
+					an.track_set_path(t, file_path)
+					var arr: Array = channels.scl
+					for i in arr.size() / 3:
+						an.scale_track_insert_key(t, i / fps, Vector3(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2]))
+			lib.add_animation(anim_name, an)
+			# Faint stays on its last pose: it goes on the base, which holds it.
+			if not a.loop and not anim_name in ["blink", "faint", "sleep_intro"]:
+				layer_lib.add_animation(anim_name, an.duplicate(true))
+		# On the base layer, each animation also carries the bones it does not move, in the
+		# idle pose (the way Cobblemon composes: Snorlax's walk moves the legs and the idle
+		# sets the arms). That way the base always writes the whole body and nothing stays
+		# frozen in an earlier pose. What not even the idle moves, at rest. Never the bare
+		# rest pose: in these models it is the T-pose.
+		var channels := {}
+		for anim_name in data.anims:
+			var bs: Dictionary = data.anims[anim_name].bones
+			for bone in bs:
+				if index.has(bone):
+					if not channels.has(bone):
+						channels[bone] = {}
+					for c in bs[bone]:
+						channels[bone][c] = true
+		# Idle pose: the first frame of ground_idle, completed with battle_idle.
+		# The normal one first: the battle one may be in a guard stance (Lucario turns its
+		# body 32°) and walking or running would inherit that turn.
+		var waits := {}
+		for ref in ["ground_idle", "battle_idle"]:
+			if not lib.has_animation(ref):
+				continue
+			var ra: Animation = lib.get_animation(ref)
+			for k in ra.get_track_count():
+				var key := "%s|%d" % [ra.track_get_path(k), ra.track_get_type(k)]
+				if waits.has(key):
+					continue
+				match ra.track_get_type(k):
+					Animation.TYPE_POSITION_3D:
+						waits[key] = ra.position_track_interpolate(k, 0.0)
+					Animation.TYPE_ROTATION_3D:
+						waits[key] = ra.rotation_track_interpolate(k, 0.0)
+					Animation.TYPE_SCALE_3D:
+						waits[key] = ra.scale_track_interpolate(k, 0.0)
+		for anim_name in data.anims:
+			if anim_name == "blink" or layer_lib.has_animation(anim_name):
+				continue
+			var an: Animation = lib.get_animation(anim_name)
+			var own: Dictionary = data.anims[anim_name].bones
+			for bone in channels:
+				var file_path := NodePath("Skeleton3D:" + bone)
+				var has: Dictionary = own.get(bone, {})
+				if channels[bone].has("pos") and not has.has("pos"):
+					var t := an.add_track(Animation.TYPE_POSITION_3D)
+					an.track_set_path(t, file_path)
+					an.position_track_insert_key(t, 0.0, waits.get("%s|%d" % [file_path, Animation.TYPE_POSITION_3D], rest_pos[bone] * PX))
+				if channels[bone].has("rot") and not has.has("rot"):
+					var t := an.add_track(Animation.TYPE_ROTATION_3D)
+					an.track_set_path(t, file_path)
+					an.rotation_track_insert_key(t, 0.0, waits.get("%s|%d" % [file_path, Animation.TYPE_ROTATION_3D], euler_zyx(rest_rot[bone]).get_rotation_quaternion()))
+				if channels[bone].has("scl") and not has.has("scl"):
+					var t := an.add_track(Animation.TYPE_SCALE_3D)
+					an.track_set_path(t, file_path)
+					an.scale_track_insert_key(t, 0.0, waits.get("%s|%d" % [file_path, Animation.TYPE_SCALE_3D], Vector3.ONE))
+		# RESET: the rest of every animated bone, so blending goes back to it.
+		var reset := Animation.new()
+		reset.length = 0.001
+		for bone in animated:
+			var file_path := NodePath("Skeleton3D:" + bone)
+			var t := reset.add_track(Animation.TYPE_POSITION_3D)
+			reset.track_set_path(t, file_path)
+			reset.position_track_insert_key(t, 0.0, rest_pos[bone] * PX)
+			t = reset.add_track(Animation.TYPE_ROTATION_3D)
+			reset.track_set_path(t, file_path)
+			reset.rotation_track_insert_key(t, 0.0, euler_zyx(rest_rot[bone]).get_rotation_quaternion())
+			t = reset.add_track(Animation.TYPE_SCALE_3D)
+			reset.track_set_path(t, file_path)
+			reset.scale_track_insert_key(t, 0.0, Vector3.ONE)
+		lib.add_animation("RESET", reset)
+	
+		# Blinking goes separately, as an additive layer (applied by PokeExtras).
+		if data.anims.has("blink"):
+			var bl: Dictionary = data.anims.blink
+			for bone in bl.bones:
+				var c := {}
+				for channel in bl.bones[bone]:
+					c[channel] = PackedFloat32Array(bl.bones[bone][channel])
+				blink[bone] = c
+			blink["_len"] = float(bl.len)
+	
 	var m := ShaderMaterial.new()
 	m.shader = SHADER
 	if ResourceLoader.exists(dir + "texture_emissive.png"):
@@ -292,10 +294,10 @@ static func _load(species: String) -> Dictionary:
 		m.set_shader_parameter("flame_tex", load(dir + "texture_flame.png"))
 		m.set_shader_parameter("has_flame", true)
 	var res := {"dir": dir, "bones": bones, "mesh": mesh, "skin": skin, "library": lib,
-		"blink": blink, "fps": fps, "mat": m, "anims": data.anims.keys(), "layer_library": layer_lib}
-	_cache[species] = res
-	_cache_order.erase(species)
-	_cache_order.append(species)
+		"blink": blink, "fps": fps, "mat": m, "anims": data.anims.keys() if include_animations else [], "layer_library": layer_lib}
+	_cache[cache_key] = res
+	_cache_order.erase(cache_key)
+	_cache_order.append(cache_key)
 	# Keep only a small working set in memory. Active models retain their own references.
 	while _cache_order.size() > CACHE_LIMIT:
 		var oldest: String = _cache_order.pop_front()
