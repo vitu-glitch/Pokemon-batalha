@@ -415,8 +415,8 @@ func _process(delta: float) -> void:
 			var a: Dictionary = _anims[k]
 			a.t += delta
 			if a.t >= a.dur:
-				_anims[k] = _anims.back()
-			_anims.pop_back()
+					_anims[k] = _anims.back()
+				_anims.pop_back()
 				continue
 			var fr := mini(int(a.t / a.dur * a.frames), a.frames - 1)
 			_draw_sprite(a.tex, a.pos, a.size, fr, a.frames, a.color, a.turn, cam, a.mat)
