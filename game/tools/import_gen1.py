@@ -218,7 +218,7 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
         for cube in bone.get("cubes", []) or []:
             origin = [float(v) for v in cube.get("origin", [0,0,0])]
             source_size = [max(0.0, float(v)) for v in cube.get("size", [0,0,0])]
-            inflate = max(0.0, float(cube.get("inflate", 0.0)))
+            inflate = float(cube.get("inflate", 0.0))
             lo = [origin[i] - inflate for i in range(3)]
             hi = [origin[i] + source_size[i] + inflate for i in range(3)]
 
@@ -226,7 +226,7 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
             # Give those planes a little physical thickness, but render only their two
             # broad faces. The four artificial edge faces have no valid texture area.
             flat_axes = [axis for axis, extent in enumerate(source_size) if extent <= 1e-5]
-            if len(flat_axes) >= 2:
+            if len(flat_axes) == 3:
                 continue
             for axis in flat_axes:
                 if hi[axis] - lo[axis] < 0.02:
@@ -243,7 +243,7 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
             inv_bone = transpose(world_basis)
 
             for face, (make_corners, _, _) in FACES.items():
-                if flat_axes and FACE_NORMAL_AXIS[face] != flat_axes[0]:
+                if len(flat_axes) == 1 and FACE_NORMAL_AXIS[face] != flat_axes[0]:
                     continue
                 corners = make_corners(x0,y0,z0,x1,y1,z1)
                 uv_points = face_uvs(cube, face, uv_dims, tex_w, tex_h)
