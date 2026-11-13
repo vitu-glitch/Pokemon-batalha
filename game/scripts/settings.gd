@@ -47,6 +47,7 @@ func load_saved() -> void:
 		# No saved options yet: the defaults, volumes included, still go into effect.
 		Audio.set_bus_volume("SFX", sfx)
 		Audio.set_bus_volume("Music", music)
+		_apply_graphics_quality()
 		return
 	rumble = cf.get_value("game", "rumble", rumble)
 	shake = cf.get_value("game", "shake", shake)
