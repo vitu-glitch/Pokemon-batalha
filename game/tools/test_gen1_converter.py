@@ -45,6 +45,32 @@ step_channel = {
 assert converter.sample_channel(step_channel, 0.5, {}, [0.0, 0.0, 0.0]) == [0.0, 0.0, 0.0]
 assert converter.sample_channel(step_channel, 1.5, {}, [0.0, 0.0, 0.0]) == [10.0, 10.0, 10.0]
 
+
+# Bedrock cube rotation without an explicit cube pivot is around the cube center,
+# not the parent bone pivot.
+mini_geometry = {
+    "minecraft:geometry": [{
+        "description": {"texture_width": 64, "texture_height": 64},
+        "bones": [{
+            "name": "root",
+            "pivot": [0, 0, 0],
+            "cubes": [{
+                "origin": [10, 0, 0],
+                "size": [2, 2, 2],
+                "rotation": [0, 0, 90],
+                "uv": [0, 0],
+            }],
+        }],
+    }]
+}
+mini_model = converter.convert_geometry(mini_geometry, {"animations": {}})
+mini_vertices = mini_model["bones"][0]["verts"]
+mean = [
+    sum(mini_vertices[i] for i in range(axis, len(mini_vertices), 3)) / (len(mini_vertices) // 3)
+    for axis in range(3)
+]
+assert all(abs(mean[i] - [11.0, 1.0, 1.0][i]) < 0.001 for i in range(3)), mean
+
 def has_motion(clip: dict) -> bool:
     for channels in clip.get("bones", {}).values():
         for values in channels.values():

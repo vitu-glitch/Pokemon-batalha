@@ -30,7 +30,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 7
+CONVERTER_VERSION = 8
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 
 # Corner order produces outward normals; triangle indices are reversed below
@@ -356,7 +356,8 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
         for cube in bone.get("cubes", []) or []:
             origin = [float(v) for v in cube.get("origin", [0,0,0])]
             source_size = [max(0.0, float(v)) for v in cube.get("size", [0,0,0])]
-            inflate = float(cube.get("inflate", 0.0))
+            # A cube-level value overrides the bone-level default.
+            inflate = float(cube.get("inflate", bone.get("inflate", 0.0)))
             lo = [origin[i] - inflate for i in range(3)]
             hi = [origin[i] + source_size[i] + inflate for i in range(3)]
 
@@ -378,15 +379,24 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
             dims = (x1-x0, y1-y0, z1-z0)
             # Inflate changes the mesh bounds, never the texture's UV layout.
             uv_dims = tuple(source_size)
-            cube_pivot = tuple(float(v) for v in cube.get("pivot", pivot))
+            # Bedrock rotates a cube around its own center when no cube pivot is
+            # specified. The bone pivot is NOT the fallback for cube rotations.
+            default_cube_pivot = [
+                origin[i] + source_size[i] * 0.5 for i in range(3)
+            ]
+            cube_pivot = tuple(float(v) for v in cube.get("pivot", default_cube_pivot))
             cube_rotation = tuple(float(v) for v in cube.get("rotation", [0,0,0]))
+            uv_cube = cube
+            if "mirror" not in cube and "mirror" in bone:
+                uv_cube = dict(cube)
+                uv_cube["mirror"] = bone["mirror"]
             inv_bone = transpose(world_basis)
 
             for face, (make_corners, _, _) in FACES.items():
                 if flat_axes and FACE_NORMAL_AXIS[face] != flat_axes[0]:
                     continue
                 corners = make_corners(x0,y0,z0,x1,y1,z1)
-                uv_points = face_uvs(cube, face, uv_dims, tex_w, tex_h)
+                uv_points = face_uvs(uv_cube, face, uv_dims, tex_w, tex_h)
                 if uv_points is None:
                     continue
                 world_points = [rotate_about(p, cube_pivot, cube_rotation) for p in corners]
