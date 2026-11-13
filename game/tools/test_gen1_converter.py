@@ -85,11 +85,27 @@ for species_id in SAMPLES:
 
     clips = model["anims"]
     assert "ground_idle" in clips and "ground_walk" in clips, species_id
-    assert has_motion(clips["ground_idle"]), (species_id, "ground_idle has no movement")
-    assert has_motion(clips["ground_walk"]), (species_id, "ground_walk has no movement")
+
+    source_clip_names = {
+        name.split(".")[-1]
+        for name in animations.get("animations", {})
+    }
+    idle_names = [
+        name for name in ("battle_idle", "ground_idle", "air_idle", "hover_idle", "water_idle")
+        if name in source_clip_names and name in clips and has_motion(clips[name])
+    ]
+    movement_names = [
+        name for name in clips
+        if name in source_clip_names
+        and any(token in name for token in ("walk", "run", "fly", "swim"))
+        and has_motion(clips[name])
+    ]
+    assert idle_names, (species_id, "no animated idle clip in source")
+    assert movement_names, (species_id, "no animated locomotion clip in source")
     print(
         f"OK {species_id}: {model_path} | {len(model['bones'])} bones, "
-        f"{vertices} vertices, {len(clips)} clips"
+        f"{vertices} vertices, {len(clips)} clips; "
+        f"idle={','.join(idle_names)}, move={','.join(movement_names)}"
     )
 
 print("Gen 1 converter regression checks passed.")

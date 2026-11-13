@@ -30,7 +30,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 6
+CONVERTER_VERSION = 7
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 
 # Corner order produces outward normals; triangle indices are reversed below
@@ -629,16 +629,36 @@ def convert_animations(animation_json):
                 "bones": bones_out,
             }
 
-    # Names expected by the movement controller. A missing run/fly clip reuses a safe walk pose.
-    fallback_idle = output.get("battle_idle")
+    # Fill missing controller names only from genuine idle/movement clips. Never
+    # borrow an arbitrary looping animation: "sleep", "faint" or a special pose
+    # would otherwise become the Pokémon's permanent standing pose.
+    fallback_idle = None
+    for preferred in ("battle_idle", "ground_idle", "air_idle", "hover_idle", "water_idle"):
+        candidate = output.get(preferred)
+        if candidate is not None and candidate["loop"]:
+            fallback_idle = candidate
+            break
     if fallback_idle is None:
-        fallback_idle = next((v for v in output.values() if v["loop"]), None)
+        for clip_name, candidate in output.items():
+            lowered = clip_name.lower()
+            if candidate["loop"] and "idle" in lowered and not any(
+                blocked in lowered for blocked in ("sleep", "faint", "render", "pose")
+            ):
+                fallback_idle = candidate
+                break
     if fallback_idle is None:
         fallback_idle = {"len":1.0,"loop":True,"frames":2,"bones":{}}
+
     output.setdefault("ground_idle", json.loads(json.dumps(fallback_idle)))
-    output.setdefault("ground_walk", json.loads(json.dumps(output["ground_idle"])))
+    output.setdefault("ground_walk", json.loads(json.dumps(
+        output.get("ground_run", output["ground_idle"])
+    )))
     output.setdefault("ground_run", json.loads(json.dumps(output["ground_walk"])))
-    output.setdefault("fly", json.loads(json.dumps(output["ground_run"])))
+    output.setdefault("air_idle", json.loads(json.dumps(output["ground_idle"])))
+    output.setdefault("air_fly", json.loads(json.dumps(
+        output.get("ground_run", output["air_idle"])
+    )))
+    output.setdefault("fly", json.loads(json.dumps(output["air_fly"])))
     return output
 
 
