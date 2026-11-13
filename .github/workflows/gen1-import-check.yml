@@ -1,0 +1,34 @@
+name: Gen 1 converter checks
+
+concurrency:
+  group: gen1-import-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - feature/bulbasaur-import
+    paths:
+      - "game/tools/import_gen1.py"
+      - "game/tools/test_gen1_converter.py"
+      - "game/tools/test_gen1_all_assets.py"
+      - "game/scripts/fighter.gd"
+      - "game/pokemon/gen1_manifest.json"
+      - ".github/workflows/gen1-import-check.yml"
+  workflow_dispatch:
+
+jobs:
+  converter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check Python syntax
+        run: python -m py_compile game/tools/import_gen1.py game/tools/test_gen1_converter.py
+        working-directory: .
+      - name: Test converted source models
+        run: python game/tools/test_gen1_converter.py
+      - name: Validate every Gen 1 asset and model
+        run: python game/tools/test_gen1_all_assets.py

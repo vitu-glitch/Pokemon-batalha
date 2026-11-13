@@ -21,7 +21,17 @@ extends RefCounted
 ## Player-facing text (style, passive name and text) is in English and is translated
 ## through game/i18n/translations.csv.
 
-const POKEMON := {
+const BUILTIN_POKEMON := {
+	"bulbasaur": {
+		"display_name": "Bulbasaur", "types": ["grass", "poison"], "cat": "special",
+		"style": "A sturdy little Grass-type that controls space with vines and punishes careless approaches.",
+		"height": 0.7, "radius": 0.42, "poise": 0, "hp": 780.0, "knockback": 1.05,
+		"speed": 6.1, "accel": 36.0, "turn": 10.0, "jump": 8.1, "gravity": 28.0, "air_control": 0.65,
+		"dodge": {"dist": 4.2, "dur": 0.27, "iframes": [0.04, 0.2], "recovery": 0.22, "charges": 2, "recharge": 1.5},
+		"moves": ["vinewhip", "razorleaf", "sludgebomb", "solarbeam"],
+		"passive": {"id": "overgrow", "display_name": "Overgrow",
+			"text": "At a third of its HP or less, its Grass moves hit 1.5 times as hard."},
+	},
 	"pikachu": {
 		"display_name": "Ash's Pikachu", "types": ["electric"], "cat": "special", "item": "lightball",
 		"style": "Ash's Pikachu, with its Light Ball: double Attack and Sp. Atk. Agile and frail; it pressures, changes direction and never stands still.",
@@ -129,6 +139,117 @@ const POKEMON := {
 			"text": "Its moves of 60 power or less hit 1.5 times as hard: Bullet Punch hits above its weight."},
 	},
 }
+
+
+## Kanto species are added at startup only after their 3D model has been imported.
+## The original hand-tuned roster always takes priority over generated defaults.
+static var POKEMON: Dictionary = _build_roster()
+
+const IMPORT_LEARNED := ["level", "egg", "tm", "tutor"]
+const IMPORT_FALLBACK_MOVES := [
+	"quickattack", "bodyslam", "bite", "headbutt",
+	"takedown", "surf", "psychic", "rest"
+]
+
+
+static func _build_roster() -> Dictionary:
+	var out: Dictionary = BUILTIN_POKEMON.duplicate(true)
+	for species_id in Species.DATA:
+		var species: Dictionary = Species.DATA[species_id]
+		var dex := int(species.get("dex", 0))
+		if dex < 1 or dex > 151 or out.has(species_id):
+			continue
+		if not FileAccess.file_exists("res://pokemon/%s/model.json.gz" % species_id):
+			continue
+		var types: Array = species.get("types", ["normal"])
+		var moves := _import_moves(species, types)
+		if moves.size() != 4:
+			continue
+
+		var passive := {
+			"id": "none",
+			"display_name": "No active ability",
+			"text": "This Pokémon's original ability is not implemented in this build yet."
+		}
+		for ability in species.get("abilities", []):
+			var ability_id: String = str(ability.get("id", ""))
+			if Abilities.DATA.has(ability_id):
+				passive = Abilities.DATA[ability_id].duplicate(true)
+				passive["id"] = ability_id
+				break
+
+		var stats: Dictionary = species.get("stats", {})
+		var height_m := clampf(float(species.get("height_m", 1.0)), 0.55, 2.6)
+		var weight_kg := maxf(float(species.get("weight_kg", 20.0)), 0.1)
+		var primary := str(types[0]) if not types.is_empty() else "normal"
+		var cat := "special" if int(stats.get("spa", 50)) >= int(stats.get("atk", 50)) else "physical"
+		var entry := {
+			"display_name": str(species.get("name", species_id.capitalize())),
+			"types": types.duplicate(),
+			"cat": cat,
+			"style": "A %s-type fighter with a moveset built from its implemented attacks." % primary.capitalize(),
+			"height": height_m,
+			"radius": clampf(height_m * 0.28, 0.32, 0.88),
+			"poise": 1 if weight_kg >= 100.0 else 0,
+			"hp": 900.0,
+			"knockback": clampf(1.1 - log(weight_kg) * 0.075, 0.48, 1.25),
+			"speed": 6.5,
+			"accel": 38.0,
+			"turn": 10.0,
+			"jump": 8.5,
+			"gravity": 28.0,
+			"air_control": 0.65,
+			"dodge": {
+				"dist": 4.5, "dur": 0.26, "iframes": [0.04, 0.2],
+				"recovery": 0.22, "charges": 2, "recharge": 1.4
+			},
+			"moves": moves,
+			"passive": passive
+		}
+		if "flying" in types or passive.id == "levitate":
+			entry["flight"] = {
+				"stamina": 4.0, "climb": 5.0, "ceiling": 7.0,
+				"recharge": 3.0, "speed": 1.0
+			}
+		if passive.id == "levitate":
+			entry["levitates"] = true
+		out[species_id] = entry
+	return out
+
+
+static func _import_moves(species: Dictionary, types: Array) -> Array:
+	var learned: Array = []
+	for item in species.get("learnset", []):
+		if str(item.get("how", "")) not in IMPORT_LEARNED:
+			continue
+		var move_id: String = str(item.get("move", ""))
+		if not Moves.DATA.has(move_id):
+			continue
+		var script_path: String = str(Moves.DATA[move_id].get("script", ""))
+		if script_path == "" or not ResourceLoader.exists(script_path):
+			continue
+		if not move_id in learned:
+			learned.append(move_id)
+
+	var selected: Array = []
+	for type_id in types:
+		for move_id in learned:
+			if Moves.DATA[move_id].get("type", "") == type_id and not move_id in selected:
+				selected.append(move_id)
+				if selected.size() >= 4:
+					return selected
+	for move_id in learned:
+		if not move_id in selected:
+			selected.append(move_id)
+			if selected.size() >= 4:
+				return selected
+	# A few species have fewer than four implemented attacks in their learnset.
+	for move_id in IMPORT_FALLBACK_MOVES:
+		if Moves.DATA.has(move_id) and ResourceLoader.exists(Moves.DATA[move_id].get("script", "")) and not move_id in selected:
+			selected.append(move_id)
+			if selected.size() >= 4:
+				break
+	return selected
 
 ## Soft type matchups: a disadvantage matters, but it does not decide the battle on its own.
 ## An immunity still lets a quarter through ("barely effective").

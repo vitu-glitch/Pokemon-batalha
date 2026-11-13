@@ -11,6 +11,7 @@ const PATH := "user://settings.cfg"
 const ROWS := 12                     # rows shown at once on the screen (it scrolls)
 const BINDABLE := ["jump", "dodge", "lock_on", "mov1", "mov2", "mov3", "mov4", "descend", "pause"]
 const FPS_CAPS := [0, 60, 120, 144, 240]
+const GRAPHICS_QUALITY := ["performance", "balanced", "quality"]
 const LANGUAGES := ["", "en", "es"]
 
 var main: Node
@@ -20,7 +21,9 @@ var music := 0.5
 var sfx := 1.0
 var fullscreen := true
 var vsync := true
-var fps_cap := 0
+var fps_cap := 60
+# Performance is the default so the game starts comfortably on older computers.
+var graphics_quality := "performance"
 var language := ""
 var trainer := TrainerData.DEFAULT     # the profile: which trainer you are
 var player_name := ""                  # and your name (empty: the trainer's)
@@ -37,12 +40,14 @@ func load_saved() -> void:
 		_saving = false
 		Audio.set_bus_volume("SFX", sfx)
 		Audio.set_bus_volume("Music", music)
+		_apply_graphics_quality()
 		return
 	var cf := ConfigFile.new()
 	if cf.load(PATH) != OK:
 		# No saved options yet: the defaults, volumes included, still go into effect.
 		Audio.set_bus_volume("SFX", sfx)
 		Audio.set_bus_volume("Music", music)
+		_apply_graphics_quality()
 		return
 	rumble = cf.get_value("game", "rumble", rumble)
 	shake = cf.get_value("game", "shake", shake)
@@ -54,6 +59,9 @@ func load_saved() -> void:
 	fullscreen = cf.get_value("screen", "fullscreen", fullscreen)
 	vsync = cf.get_value("screen", "vsync", vsync)
 	fps_cap = cf.get_value("screen", "fps_cap", fps_cap)
+	graphics_quality = str(cf.get_value("screen", "graphics_quality", graphics_quality))
+	if not GRAPHICS_QUALITY.has(graphics_quality):
+		graphics_quality = "performance"
 	bindings = cf.get_value("controls", "bindings", {})
 	apply(true)
 
@@ -72,6 +80,7 @@ func save() -> void:
 	cf.set_value("screen", "fullscreen", fullscreen)
 	cf.set_value("screen", "vsync", vsync)
 	cf.set_value("screen", "fps_cap", fps_cap)
+	cf.set_value("screen", "graphics_quality", graphics_quality)
 	cf.set_value("controls", "bindings", bindings)
 	cf.save(PATH)
 
@@ -86,6 +95,7 @@ func apply(screen := false) -> void:
 		# "Mailbox" when on: it does not wait on the frame queue (less input lag) and does not tear.
 		DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_MAILBOX if vsync else DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = fps_cap
+	_apply_graphics_quality()
 	if language != "":
 		TranslationServer.set_locale(language)
 	Controls.configure()
@@ -94,6 +104,49 @@ func apply(screen := false) -> void:
 			var ev := Controls.from_data(bindings[action].get(kind, []))
 			if ev:
 				Controls.rebind(action, ev)
+
+
+## Scales only the 3D scene (the pixel-art interface stays at full resolution) and
+## turns off the most expensive optional stadium effects on low-end computers.
+func apply_graphics_quality() -> void:
+	_apply_graphics_quality()
+
+
+func _apply_graphics_quality() -> void:
+	var viewport := get_viewport()
+	if viewport:
+		viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR
+		match graphics_quality:
+			"performance":
+				viewport.scaling_3d_scale = 0.59
+			"balanced":
+				viewport.scaling_3d_scale = 0.78
+			_:
+				viewport.scaling_3d_scale = 1.0
+	if main == null or main.arena == null:
+		return
+	var pending: Array = [main.arena]
+	while not pending.is_empty():
+		var node: Node = pending.pop_back()
+		if node is WorldEnvironment:
+			var world_env := node as WorldEnvironment
+			if world_env.environment != null:
+				var env: Environment = world_env.environment
+				if not node.has_meta("_quality_original_environment"):
+					node.set_meta("_quality_original_environment", {
+						"ssao": env.ssao_enabled,
+						"fog": env.volumetric_fog_enabled
+					})
+				var original: Dictionary = node.get_meta("_quality_original_environment")
+				env.ssao_enabled = bool(original.ssao) if graphics_quality != "performance" else false
+				env.volumetric_fog_enabled = bool(original.fog) if graphics_quality == "quality" else false
+		if node is Light3D:
+			var light := node as Light3D
+			if not node.has_meta("_quality_original_shadows"):
+				node.set_meta("_quality_original_shadows", light.shadow_enabled)
+			light.shadow_enabled = bool(node.get_meta("_quality_original_shadows")) if graphics_quality != "performance" else false
+		for child in node.get_children():
+			pending.append(child)
 
 
 # ---------------------------------------------------------------- the Options screen
@@ -127,6 +180,9 @@ func items() -> Array:
 		"value": tr("On") if vsync else tr("Off"), "help": tr("Stops tearing; off can lower the delay a little.")})
 	out.append({"id": "fps_cap", "kind": "choice", "label": tr("Frame limit"),
 		"value": tr("None") if fps_cap == 0 else "%d" % fps_cap, "help": tr("Highest frames per second.")})
+	out.append({"id": "graphics_quality", "kind": "choice", "label": tr("Graphics quality"),
+		"value": {"performance": tr("Performance"), "balanced": tr("Balanced"), "quality": tr("Quality")}.get(graphics_quality, tr("Performance")),
+		"help": tr("Performance uses FSR upscaling and disables costly stadium effects; the interface stays sharp.")})
 	out.append({"id": "h_game", "kind": "header", "label": tr("Game")})
 	out.append({"id": "shake", "kind": "slider", "label": tr("Camera shake"), "value": "%d%%" % roundi(shake * 100.0),
 		"help": tr("How much the camera shakes on hits.")})
@@ -224,6 +280,9 @@ func _change(id: String, step: int) -> void:
 			apply(true)
 		"fps_cap":
 			fps_cap = FPS_CAPS[(FPS_CAPS.find(fps_cap) + step + FPS_CAPS.size()) % FPS_CAPS.size()]
+		"graphics_quality":
+			var i := GRAPHICS_QUALITY.find(graphics_quality)
+			graphics_quality = GRAPHICS_QUALITY[(i + step + GRAPHICS_QUALITY.size()) % GRAPHICS_QUALITY.size()]
 		"language":
 			language = LANGUAGES[(LANGUAGES.find(language) + step + LANGUAGES.size()) % LANGUAGES.size()]
 			TranslationServer.set_locale(language if language != "" else OS.get_locale_language())

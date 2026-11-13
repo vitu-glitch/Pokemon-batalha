@@ -15,10 +15,10 @@ extends Node3D
 
 const DIR := "res://fx/particles/"
 const SEQUENCES := "res://fx/sequences/"
+## Conservative battle-effect limits for lower-end CPUs. Every particle is updated
+## in GDScript each frame, so keeping this bounded prevents large move combos from
+## overwhelming the main thread. Low-priority effects yield first.
 const MAX_EMITTERS := 120
-## Budget of live particles (each one evaluates its Molang in GDScript: about 25 µs).
-## Past the cap, new effects spawn with fewer particles. Low-priority ones ("low") give
-## way before the player's.
 const BUDGET := 320
 const BUDGET_LOW := 160
 
@@ -100,7 +100,14 @@ func clear() -> void:
 ## Launches a piece. `target` is the point it "looks at" (if any).
 func play(id: String, pos: Vector3, target = null, opts := {}) -> Dictionary:
 	var d := load_def(id)
-	if d.is_empty() or _emitters.size() >= MAX_EMITTERS:
+	var emitter_limit := MAX_EMITTERS
+	if main != null and main.options != null:
+		match main.options.graphics_quality:
+			"performance":
+				emitter_limit = 64
+			"balanced":
+				emitter_limit = 90
+	if d.is_empty() or _emitters.size() >= emitter_limit:
 		return {}
 	var basis: Basis = opts.get("basis", Basis.IDENTITY)
 	var vars := {"emitter_age": 0.0, "emitter_lifetime": 1.0, "entity_height": opts.get("height", 1.0),
@@ -288,7 +295,13 @@ func _spawn_n(em: Dictionary, n: int) -> void:
 
 func _spawn(em: Dictionary) -> void:
 	var cap := BUDGET_LOW if em.low else BUDGET
-	if _alive > cap and randf() > float(cap) / _alive:
+	if main != null and main.options != null:
+		match main.options.graphics_quality:
+			"performance":
+				cap = 48 if em.low else 96
+			"balanced":
+				cap = 112 if em.low else 224
+	if _alive >= cap:
 		return
 	_alive += 1
 	var c: Dictionary = em.d.comp
@@ -387,7 +400,8 @@ func _process(delta: float) -> void:
 	while i < _pending.size():
 		if _pending[i][0] <= _t:
 			var f: Callable = _pending[i][1]
-			_pending.remove_at(i)
+			_pending[i] = _pending.back()
+			_pending.pop_back()
 			f.call()
 		else:
 			i += 1
@@ -402,7 +416,8 @@ func _process(delta: float) -> void:
 		var em: Dictionary = _emitters[e]
 		_update_emitter(em, delta, cam)
 		if not em.active and em.parts.is_empty():
-			_emitters.remove_at(e)
+			_emitters[e] = _emitters.back()
+			_emitters.pop_back()
 		else:
 			e += 1
 	if cam != null:
@@ -413,7 +428,8 @@ func _process(delta: float) -> void:
 			var a: Dictionary = _anims[k]
 			a.t += delta
 			if a.t >= a.dur:
-				_anims.remove_at(k)
+				_anims[k] = _anims.back()
+				_anims.pop_back()
 				continue
 			var fr := mini(int(a.t / a.dur * a.frames), a.frames - 1)
 			_draw_sprite(a.tex, a.pos, a.size, fr, a.frames, a.color, a.turn, cam, a.mat)
@@ -485,7 +501,8 @@ func _update_particles(em: Dictionary, delta: float, cam: Camera3D) -> void:
 		p.particle_age += delta
 		if p.particle_age >= p.particle_lifetime:
 			_particle_event(em, p, "expiration_event")
-			em.parts.remove_at(i)
+			em.parts[i] = em.parts.back()
+			em.parts.pop_back()
 			continue
 		for k in tl:
 			if not p._fired.has(k) and p.particle_age >= float(k):
@@ -510,7 +527,8 @@ func _update_particles(em: Dictionary, delta: float, cam: Camera3D) -> void:
 			var r := ctx.ev(col.get("collision_radius", 0.1))
 			if p._pos.y - r < em.ground:
 				if col.get("expire_on_contact", false):
-					em.parts.remove_at(i)
+					em.parts[i] = em.parts.back()
+					em.parts.pop_back()
 					continue
 				p._pos.y = em.ground + r
 				if p._vel.y < 0.0:
