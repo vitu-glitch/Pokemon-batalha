@@ -78,6 +78,8 @@ var _vs := []                    # [mine, theirs] on the VS screen
 var _renders := {}               # slot -> {vp, model, species}: live 3D renders on the menus
 var _generating := false
 var _portrait_page := -1
+var _pokemon_cache: Array = []
+var _pokemon_cache_ready := false
 # Moves screen: pokemon (list), slots (its 4 + ability), list (options for the slot)
 var edit_phase := "pokemon"
 var edit_sp := ""
@@ -106,6 +108,8 @@ func _ready() -> void:
 
 ## Only those with all their moves done (the rest are half finished).
 func pokemon_list() -> Array:
+	if _pokemon_cache_ready:
+		return _pokemon_cache
 	var list: Array = []
 	for sp in Roster.POKEMON:
 		var data: Dictionary = Roster.POKEMON[sp]
@@ -121,7 +125,9 @@ func pokemon_list() -> Array:
 		var db: int = int(Species.DATA.get(b, {}).get("dex", 9999))
 		return a < b if da == db else da < db
 	)
-	return list
+	_pokemon_cache = list
+	_pokemon_cache_ready = true
+	return _pokemon_cache
 
 
 # ---------------------------------------------------------------- open and close
