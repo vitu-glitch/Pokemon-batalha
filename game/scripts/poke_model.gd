@@ -98,7 +98,25 @@ static func _load(species: String) -> Dictionary:
 	var dir := "res://pokemon/%s/" % species
 	var raw := FileAccess.get_file_as_bytes(dir + "model.json.gz").decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
 	var data: Dictionary = JSON.parse_string(raw.get_string_from_utf8())
-	var fps := float(data.fps)
+	if data.is_empty():
+		push_error("Pokemon model is empty or invalid: %s" % species)
+		return {}
+
+	# Cobblemon/Blockbench files commonly name clips as
+	# "animation.<pokemon>.<clip>". The battle code uses the short clip names.
+	# Accept both layouts so an exported namespace never disables every animation.
+	var source_anims: Dictionary = data.get("anims", {})
+	var normalized_anims := {}
+	for raw_name in source_anims:
+		var clip_name := str(raw_name)
+		if clip_name.begins_with("animation."):
+			var last_dot := clip_name.rfind(".")
+			if last_dot >= 0:
+				clip_name = clip_name.substr(last_dot + 1)
+		normalized_anims[clip_name] = source_anims[raw_name]
+	data.anims = normalized_anims
+
+	var fps := maxf(float(data.get("fps", 30.0)), 1.0)
 
 	# Bones in parent -> child order, with their rest.
 	var by_name := {}
@@ -168,7 +186,8 @@ static func _load(species: String) -> Dictionary:
 		var a: Dictionary = data.anims[anim_name]
 		var an := Animation.new()
 		an.length = maxf(float(a.len), 1.0 / fps)
-		an.loop_mode = Animation.LOOP_LINEAR if a.loop else Animation.LOOP_NONE
+		var looping := _is_looping(a.get("loop", false))
+		an.loop_mode = Animation.LOOP_LINEAR if looping else Animation.LOOP_NONE
 		for bone in a.bones:
 			if not index.has(bone):
 				continue
@@ -197,7 +216,7 @@ static func _load(species: String) -> Dictionary:
 					an.scale_track_insert_key(t, i / fps, Vector3(arr[i * 3], arr[i * 3 + 1], arr[i * 3 + 2]))
 		lib.add_animation(anim_name, an)
 		# Faint stays on its last pose: it goes on the base, which holds it.
-		if not a.loop and not anim_name in ["blink", "faint", "sleep_intro"]:
+		if not looping and not anim_name in ["blink", "faint", "sleep_intro"]:
 			layer_lib.add_animation(anim_name, an.duplicate(true))
 	# On the base layer, each animation also carries the bones it does not move, in the
 	# idle pose (the way Cobblemon composes: Snorlax's walk moves the legs and the idle
@@ -291,6 +310,18 @@ static func _load(species: String) -> Dictionary:
 		"blink": blink, "fps": fps, "mat": m, "anims": data.anims.keys(), "layer_library": layer_lib}
 	_cache[species] = res
 	return res
+
+
+static func _is_looping(value: Variant) -> bool:
+	# Blockbench stores the loop mode as "loop", "once" or "hold".
+	# Older converted assets may already store a boolean.
+	if typeof(value) == TYPE_BOOL:
+		return value
+	if typeof(value) == TYPE_STRING:
+		return str(value).to_lower() in ["loop", "true", "1"]
+	if typeof(value) == TYPE_INT or typeof(value) == TYPE_FLOAT:
+		return float(value) != 0.0
+	return false
 
 
 static func _sort(b: Dictionary, by_name: Dictionary, order: Array, seen: Dictionary) -> void:
