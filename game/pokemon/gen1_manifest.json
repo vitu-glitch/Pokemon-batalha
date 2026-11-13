@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "status": "asset_map_only_not_yet_converted_or_playable",
-  "source_repository": "https://github.com/Cobblemon-Global/Cobblemon",
+  "source_repository": "https://gitlab.com/cable-mc/cobblemon",
   "source_branch": "main",
-  "source_commit": "75bb1a6c2fe92ef54951fb68d16d21f290a9ee88",
+  "source_commit": "main",
   "license": "Creative Commons Attribution-NonCommercial 3.0 Unported (model/texture assets)",
   "license_file": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/license",
-  "note": "This file maps the 151 Kanto species to their upstream model, animation, normal texture and shiny texture files. It is an import manifest, not runtime-ready game assets. Geometry gender/form variants are retained in model_variants; the first selected model is the default import candidate.",
+  "note": "This file maps the 151 Kanto species to their upstream model, animation, normal texture and shiny texture files. Assets are fetched from the maintained Cable/Cobblemon GitLab main branch so the importer receives current model and animation fixes. It is an import manifest, not runtime-ready game assets. Geometry gender/form variants are retained in model_variants; the first selected model is the default import candidate.",
   "pokemon": [
     {
       "dex": 1,

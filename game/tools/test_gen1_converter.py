@@ -9,7 +9,8 @@ import import_gen1 as converter
 
 ROOT = Path(__file__).resolve().parents[1]
 manifest = json.loads((ROOT / "pokemon" / "gen1_manifest.json").read_text(encoding="utf-8"))
-base = "https://raw.githubusercontent.com/Cobblemon-Global/Cobblemon/" + manifest["source_commit"] + "/"
+source_ref = manifest.get("source_branch", "main")
+base = f"https://gitlab.com/cable-mc/cobblemon/-/raw/{source_ref}/"
 items = {item["id"]: item for item in manifest["pokemon"]}
 
 SAMPLES = ["bulbasaur", "pikachu", "pidgey", "gengar", "charizard"]

@@ -4,9 +4,9 @@
 Run from the repository root with:
     py game/tools/import_gen1.py
 
-The importer uses Python's standard library only. It downloads a pinned Cobblemon
-asset revision, converts Bedrock geometry and animations to PokeBrawl's runtime
-format, and writes the species data consumed by the Godot project.
+The importer uses Python's standard library only. It downloads current Cobblemon
+assets from the maintained Cable/Cobblemon GitLab main branch, converts Bedrock
+geometry and animations to PokeBrawl's runtime format, and writes game species data.
 """
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 3
+CONVERTER_VERSION = 4
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 
 # Corner order produces outward normals; triangle indices are reversed below
@@ -586,12 +586,25 @@ def process_one(item, raw_base):
         packed = json.dumps(model, separators=(",",":"), ensure_ascii=False).encode("utf-8")
         model_path.write_bytes(gzip.compress(packed, compresslevel=9))
 
-    download_if_missing(normal_path, raw_base + item["texture"])
-    download_if_missing(shiny_path, raw_base + item["shiny_texture"])
+    # Update textures together with the model when the source revision changes.
+    source_marker = target_dir / "import_source.txt"
+    previous_source = source_marker.read_text(encoding="utf-8").strip() if source_marker.exists() else ""
+    if not preserve_existing and previous_source != SOURCE_COMMIT:
+        normal_path.write_bytes(fetch_bytes(raw_base + item["texture"]))
+        shiny_path.write_bytes(fetch_bytes(raw_base + item["shiny_texture"]))
+        for texture_path in (normal_path, shiny_path):
+            with texture_path.open("rb") as stream:
+                if stream.read(8) != bytes((137, 80, 78, 71, 13, 10, 26, 10)):
+                    raise RuntimeError(f"Downloaded texture is not a valid PNG: {texture_path}")
+    else:
+        download_if_missing(normal_path, raw_base + item["texture"])
+        download_if_missing(shiny_path, raw_base + item["shiny_texture"])
+    if not preserve_existing:
+        source_marker.write_text(SOURCE_COMMIT + "\\n", encoding="utf-8")
 
     attribution = (
         f"{species_data['name']} model, animation and textures\n"
-        f"Source: Cobblemon-Global/Cobblemon at commit {SOURCE_COMMIT}.\n"
+        f"Source: Cable/Cobblemon on GitLab, ref {SOURCE_COMMIT}.\n"
         f"Model: {item['model']}\n"
         f"Animations: {item['animations']}\n"
         f"Texture: {item['texture']}\n"
@@ -650,8 +663,8 @@ def main():
     if not MANIFEST_PATH.exists():
         raise SystemExit(f"Manifest missing: {MANIFEST_PATH}")
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    SOURCE_COMMIT = manifest["source_commit"]
-    raw_base = f"https://raw.githubusercontent.com/Cobblemon-Global/Cobblemon/{SOURCE_COMMIT}/"
+    SOURCE_COMMIT = str(manifest.get("source_branch", "main"))
+    raw_base = f"https://gitlab.com/cable-mc/cobblemon/-/raw/{SOURCE_COMMIT}/"
     items = sorted(manifest["pokemon"], key=lambda item:int(item["dex"]))
     if len(items) != 151:
         raise SystemExit(f"Expected 151 species, found {len(items)}")
