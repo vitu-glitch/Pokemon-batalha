@@ -953,7 +953,8 @@ func _generate_portraits() -> void:
 		vp.transparent_bg = true
 		vp.size = Vector2i(128, 128)
 		vp.msaa_3d = Viewport.MSAA_DISABLED
-		# Portraits are captured once below; no need to keep rendering them.
+		# Render while capturing this one-time portrait; the viewport is freed after capture.
+		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 		add_child(vp)
 		var data := _setup_portrait(vp, sp, 0.5)
 		# Wait for the animation to place the skeleton: before that, the locators are in
