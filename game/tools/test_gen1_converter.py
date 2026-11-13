@@ -43,6 +43,7 @@ step_channel = {
     "2.0": [10.0, 10.0, 10.0],
 }
 assert converter.sample_channel(step_channel, 0.5, {}, [0.0, 0.0, 0.0]) == [0.0, 0.0, 0.0]
+assert converter.sample_channel(step_channel, 1.0, {}, [0.0, 0.0, 0.0]) == [10.0, 10.0, 10.0]
 assert converter.sample_channel(step_channel, 1.5, {}, [0.0, 0.0, 0.0]) == [10.0, 10.0, 10.0]
 
 

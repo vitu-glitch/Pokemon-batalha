@@ -30,7 +30,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 9
+CONVERTER_VERSION = 10
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 METADATA_SOURCE_COMMIT = "75bb1a6c2fe92ef54951fb68d16d21f290a9ee88"
 METADATA_RAW_BASE = (
@@ -584,7 +584,7 @@ def sample_channel(channel, seconds, query, default):
             if seconds >= keys[-1][0]:
                 return vector_value(channel[keys[-1][1]], seconds, query, default, "post")
             for (ta,ka),(tb,kb) in zip(keys,keys[1:]):
-                if ta <= seconds <= tb:
+                if ta <= seconds < tb:
                     # Bedrock interpolates away from the previous key's post value
                     # toward the next key's pre value. These can differ at a jump.
                     va = vector_value(channel[ka], ta, query, default, "post")
