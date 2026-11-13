@@ -1,5 +1,9 @@
 name: Gen 1 converter checks
 
+concurrency:
+  group: gen1-import-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
