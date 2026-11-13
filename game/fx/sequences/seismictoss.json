@@ -1,0 +1,1 @@
+[{"fx":"seismictoss_actor","who":"actor","loc":"root"},{"pause":0.28},{"fx":"seismictoss_actorgrab","who":"target","loc":"root"},{"fx":"seismictoss_actorin","who":"target","loc":"root"},{"pause":0.1},{"pause":2.25},{"pause":1.8}]

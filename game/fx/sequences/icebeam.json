@@ -1,0 +1,1 @@
+[{"pause":0.1},{"fx":"icebeam_target","who":"target","loc":"target"},{"fx":"icebeam_targetbuild","who":"target","loc":"middle"},{"pause":0.5},{"fx":"icebeam_targetburst","who":"target","loc":"target"},{"pause":0.25},{"fx":"icebeam_targetfrost","who":"target","loc":"target"},{"pause":1.85}]

@@ -1,0 +1,1 @@
+[{"fx":"hydropump_actorpulse","who":"actor","loc":"special"},{"fx":"hydropump_actor","who":"actor","loc":"special"},{"pause":0.03},{"fx":"hydropump_actor","who":"actor","loc":"special"},{"pause":0.27},{"fx":"hydropump_target","who":"target","loc":"target"},{"pause":0.55},{"fx":"hydropump_targetburst","who":"target","loc":"target"},{"pause":1.6}]

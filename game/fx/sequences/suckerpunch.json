@@ -1,0 +1,1 @@
+[{"pause":0.6},{"fx":"suckerpunch_target1","who":"target","loc":"root"},{"pause":0.2},{"fx":"suckerpunch_target2","who":"target","loc":"root"},{"pause":0.03},{"fx":"suckerpunch_targethit","who":"target","loc":"root"},{"fx":"suckerpunch_targetspark","who":"target","loc":"root"},{"pause":1.7}]

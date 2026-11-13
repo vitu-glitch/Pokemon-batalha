@@ -1,0 +1,1 @@
+[{"fx":"spore","who":"actor","loc":"target"},{"fx":"spore_cloud","who":"actor","loc":"target"},{"pause":0.55},{"fx":"spore_land_alt","who":"target","loc":"root"},{"pause":1},{"pause":1.95}]

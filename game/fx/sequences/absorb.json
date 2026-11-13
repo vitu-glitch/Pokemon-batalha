@@ -1,0 +1,1 @@
+[{"fx":"absorb_actorhit","who":"target","loc":"target"},{"fx":"absorb_actor","who":"actor","loc":"special"},{"fx":"absorb_actorhealtimer","who":"actor","loc":"middle"},{"pause":1.75}]

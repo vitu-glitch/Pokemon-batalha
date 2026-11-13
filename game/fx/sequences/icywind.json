@@ -1,0 +1,1 @@
+[{"fx":"icywind_actorpilot","who":"actor","loc":"special"},{"pause":0.5},{"fx":"icywind_targetfrost","who":"target","loc":"middle"},{"pause":0.85},{"fx":"icywind_target","who":"target","loc":"middle"},{"pause":1.6}]

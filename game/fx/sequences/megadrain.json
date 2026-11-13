@@ -1,0 +1,1 @@
+[{"fx":"megadrain_actorhit","who":"target","loc":"target"},{"fx":"megadrain_actor","who":"actor","loc":"special"},{"fx":"megadrain_actordrainaccent","who":"actor","loc":"special"},{"fx":"megadrain_actorhealtimer","who":"actor","loc":"middle"},{"pause":1.75}]

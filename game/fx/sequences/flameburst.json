@@ -1,0 +1,1 @@
+[{"fx":"flameburst_actorfling","who":"actor","loc":"special"},{"pause":0.01},{"fx":"flameburst_actor","who":"actor","loc":"special"},{"pause":0.88},{"fx":"flameburst_target","who":"target","loc":"target"},{"pause":1.8}]

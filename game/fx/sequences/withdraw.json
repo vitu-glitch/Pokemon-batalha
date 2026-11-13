@@ -1,0 +1,1 @@
+[{"fx":"withdraw_actor1","who":"actor","loc":"root"},{"pause":0.5},{"fx":"withdraw_actorbubbles","who":"actor","loc":"root"},{"pause":0.9},{"pause":1.9}]

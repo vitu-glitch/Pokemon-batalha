@@ -1,0 +1,1 @@
+[{"fx":"gigadrain_actorhit","who":"target","loc":"target"},{"fx":"gigadrain_actor","who":"actor","loc":"special"},{"fx":"gigadrain_actorouter","who":"actor","loc":"special"},{"fx":"gigadrain_actordrainaccent","who":"actor","loc":"special"},{"fx":"gigadrain_actorhealtimer","who":"actor","loc":"middle"},{"pause":1.75}]

@@ -1,0 +1,1 @@
+[{"fx":"psychic_actor","who":"actor","loc":"root"},{"fx":"psychic_actordots","who":"actor","loc":"root"},{"pause":0.35},{"fx":"psychic_target","who":"target","loc":"root"},{"pause":0.25},{"pause":0.7},{"fx":"psychic_impact","who":"target","loc":"target"},{"fx":"psychic_impactdots","who":"target","loc":"target"},{"pause":1.8}]

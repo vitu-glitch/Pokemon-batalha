@@ -1,0 +1,1 @@
+[{"fx":"flamethrower_actor","who":"actor","loc":"special"},{"pause":0.25},{"fx":"flamethrower_target","who":"target","loc":"target"},{"fx":"flamethrower_targetburst","who":"target","loc":"target"},{"pause":0.65},{"fx":"flamethrower_targetburst","who":"target","loc":"target"},{"pause":1.9}]

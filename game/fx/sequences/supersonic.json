@@ -1,0 +1,1 @@
+[{"fx":"supersonic_launch","who":"actor","loc":"special_attack"},{"fx":"supersonic_actor","who":"actor","loc":"special_attack"},{"pause":0.55},{"fx":"supersonic_impact1","who":"target","loc":"target"},{"pause":0.1},{"pause":0.4},{"pause":1.25}]

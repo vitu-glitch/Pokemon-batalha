@@ -1,0 +1,1 @@
+[{"fx":"waterpulse_actorsuds","who":"actor","loc":"root"},{"pause":0.6},{"fx":"waterpulse_actor","who":"actor","loc":"special"},{"pause":0.85},{"fx":"waterpulse_target","who":"target","loc":"target"},{"fx":"waterpulse_targetsplash","who":"target","loc":"target"},{"fx":"waterpulse_actorsuds","who":"target","loc":"root"},{"pause":1.9}]

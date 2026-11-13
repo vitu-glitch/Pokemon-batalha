@@ -1,0 +1,1 @@
+[{"fx":"confusion_actorglint","who":"actor","loc":"root"},{"fx":"confusion_actor","who":"actor","loc":"root"},{"fx":"confusion_target","who":"target","loc":"target"},{"pause":0.9},{"fx":"confusion_impact","who":"target","loc":"target"},{"fx":"confusion_impactdots","who":"target","loc":"target"},{"pause":0.01},{"pause":1.8}]

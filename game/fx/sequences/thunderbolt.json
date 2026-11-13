@@ -1,0 +1,1 @@
+[{"fx":"thunderbolt_actorsparks","who":"actor","loc":"middle"},{"fx":"thunderbolt_actorbolts","who":"actor","loc":"middle"},{"pause":0.65},{"fx":"thunderbolt_actor","who":"actor","loc":"target"},{"pause":0.12},{"fx":"thunderbolt_target","who":"target","loc":"target"},{"pause":1.9}]

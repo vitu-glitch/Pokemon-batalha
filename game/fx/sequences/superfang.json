@@ -1,0 +1,1 @@
+[{"fx":"superfang_actor","who":"actor","loc":"root"},{"fx":"superfang_actorrage","who":"actor","loc":"root"},{"pause":1.05},{"fx":"superfang_target","who":"target","loc":"root"},{"pause":0.15},{"fx":"superfang_targetspark","who":"target","loc":"root"},{"pause":1.8}]

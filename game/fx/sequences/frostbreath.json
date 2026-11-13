@@ -1,0 +1,1 @@
+[{"fx":"frostbreath_actor","who":"actor","loc":"special"},{"fx":"frostbreath_actorsparkle","who":"actor","loc":"special"},{"pause":0.25},{"fx":"frostbreath_target","who":"target","loc":"target"},{"pause":0.65},{"pause":1.9}]

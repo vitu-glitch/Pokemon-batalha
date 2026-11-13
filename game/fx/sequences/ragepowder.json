@@ -1,0 +1,1 @@
+[{"fx":"ragepowder","who":"actor","loc":"target"},{"fx":"ragepowder_cloud","who":"actor","loc":"target"},{"pause":0.55},{"fx":"ragepowder_land","who":"actor","loc":"root"},{"pause":1.95}]

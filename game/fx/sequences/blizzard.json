@@ -1,0 +1,1 @@
+[{"fx":"blizzard_actor","who":"actor","loc":"root"},{"pause":0.3},{"fx":"blizzard_targetswirl","who":"target","loc":"middle"},{"pause":0.2},{"pause":0.65},{"fx":"blizzard_target","who":"target","loc":"middle"},{"pause":1.6}]

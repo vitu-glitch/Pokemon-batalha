@@ -1,0 +1,1 @@
+[{"pause":1.17},{"fx":"dracometeor_actorpulse","who":"actor","loc":"mouth"},{"pause":0.7},{"fx":"dracometeor_accent","who":"actor","loc":"root"},{"pause":0.25},{"pause":0.75},{"pause":0.25},{"pause":0.125},{"pause":0.5},{"pause":0.6},{"pause":0.15},{"fx":"dracometeor_targetfloorscorch","who":"target","loc":"root"}]

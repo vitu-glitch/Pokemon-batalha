@@ -1,0 +1,1 @@
+[{"pause":0.55},{"fx":"protect_actor1","who":"actor","loc":"root"},{"pause":0.1},{"fx":"protect_actorcolor1","who":"actor","loc":"root"},{"pause":0.7},{"pause":1.2}]

@@ -1,0 +1,1 @@
+[{"fx":"sandattack_actor","who":"actor","loc":"root"},{"fx":"sandattack_residual","who":"actor","loc":"root"},{"pause":0.3},{"fx":"sandattack_impact","who":"target","loc":"target"},{"fx":"sandattack_impactresidual","who":"target","loc":"target"},{"pause":1.25}]

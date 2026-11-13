@@ -1,0 +1,1 @@
+[{"fx":"explosion_actororbs","who":"actor","loc":"middle"},{"pause":1.5},{"fx":"explosion_actorbigring","who":"actor","loc":"root"},{"pause":0.05},{"fx":"explosion_actorfloorscorch","who":"actor","loc":"middle"},{"pause":1.8}]

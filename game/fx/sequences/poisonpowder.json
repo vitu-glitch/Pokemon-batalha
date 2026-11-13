@@ -1,0 +1,1 @@
+[{"fx":"poisonpowder","who":"actor","loc":"target"},{"fx":"poisonpowder_cloud","who":"actor","loc":"target"},{"pause":0.55},{"fx":"poisonpowder_land","who":"target","loc":"root"},{"pause":1.95}]

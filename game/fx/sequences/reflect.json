@@ -1,0 +1,1 @@
+[{"fx":"reflect_actor","who":"actor","loc":"target"},{"pause":0.07},{"fx":"reflect_actoreffect","who":"actor","loc":"target"},{"pause":0.66},{"pause":1.2}]

@@ -1,0 +1,1 @@
+[{"fx":"stringshot_actorspray","who":"actor","loc":"mouth"},{"fx":"stringshot_actor","who":"actor","loc":"mouth"},{"pause":0.3},{"fx":"stringshot_target1","who":"target","loc":"middle"},{"fx":"stringshot_target2","who":"target","loc":"middle"},{"fx":"stringshot_targetwrap","who":"target","loc":"middle"},{"pause":1.6},{"pause":1.6}]

@@ -1,0 +1,1 @@
+[{"fx":"leechlife_target","who":"target","loc":"target"},{"pause":0.125},{"fx":"leechlife_targetdrain","who":"target","loc":"target"},{"fx":"leechlife_actor","who":"actor","loc":"target"},{"pause":1.75}]

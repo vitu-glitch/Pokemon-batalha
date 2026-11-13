@@ -1,0 +1,1 @@
+[{"pause":0.1},{"fx":"flamewheel_actor","who":"actor","loc":"middle"},{"pause":1.15},{"fx":"flamewheel_target","who":"target","loc":"target"},{"fx":"ember_targetlinger","who":"target","loc":"target"},{"pause":1.8}]

@@ -1,0 +1,1 @@
+[{"fx":"nastyplot_actortrailsmall","who":"actor","loc":"top"},{"pause":0.1},{"fx":"nastyplot_actortraillarge","who":"actor","loc":"top"},{"pause":0.1},{"fx":"nastyplot_actorcloud","who":"actor","loc":"top"},{"pause":1.4},{"fx":"nastyplot_actorexclamation","who":"actor","loc":"top"},{"pause":0.3},{"pause":2.5}]

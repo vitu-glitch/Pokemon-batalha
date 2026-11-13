@@ -1,0 +1,1 @@
+[{"fx":"stunspore","who":"actor","loc":"target"},{"fx":"stunspore_cloud","who":"actor","loc":"target"},{"pause":0.55},{"fx":"stunspore_land","who":"target","loc":"root"},{"pause":1.95}]

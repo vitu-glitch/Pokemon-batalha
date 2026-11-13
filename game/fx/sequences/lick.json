@@ -1,0 +1,1 @@
+[{"fx":"lick_target","who":"target","loc":"root"},{"pause":0.15},{"fx":"lick_targetsplash","who":"target","loc":"root"},{"fx":"lick_targetdrip","who":"target","loc":"root"},{"pause":1.6}]

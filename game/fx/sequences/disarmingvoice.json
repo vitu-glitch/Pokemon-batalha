@@ -1,0 +1,1 @@
+[{"fx":"disarmingvoice_actor1","who":"actor","loc":"mouth"},{"fx":"disarmingvoice_actorhearts","who":"actor","loc":"mouth"},{"pause":0.005},{"fx":"disarmingvoice_actor2","who":"actor","loc":"mouth"},{"pause":1},{"fx":"disarmingvoice_target","who":"target","loc":"target"},{"pause":1.6}]

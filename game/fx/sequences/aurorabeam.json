@@ -1,0 +1,1 @@
+[{"fx":"aurorabeam_charge","who":"actor","loc":"special"},{"pause":0.53},{"fx":"aurorabeam_actorpilot","who":"actor","loc":"special"},{"pause":0.1},{"fx":"aurorabeam_target","who":"target","loc":"target"},{"pause":0.5},{"fx":"aurorabeam_targetburst","who":"target","loc":"target"},{"pause":1.7}]
