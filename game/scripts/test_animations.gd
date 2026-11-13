@@ -117,6 +117,10 @@ func _traverse(sp: String) -> void:
 		return
 	main.ai.mode = "still"
 	var j := _j()
+	var idle_available := j.model.has_anim("battle_idle") or j.model.has_anim("ground_idle")
+	if not idle_available:
+		_fails.append("[idle] missing battle_idle and ground_idle clips; found %s" % j.model.anim_player.get_animation_list())
+		print("  FAIL no usable idle clip")
 	j.is_player = false
 	j.reset(Vector3(-5, 0, 0), PI * 0.5)
 	main.fighters[1].reset(Vector3(4, 0, 0), -PI * 0.5)
@@ -132,6 +136,9 @@ func _traverse(sp: String) -> void:
 	for b in maximum:
 		if maximum[b] > 8.0:
 			_moved.append(b)
+	if _moved.is_empty():
+		_fails.append("[idle] no bone changed during the idle clip %s" % j.model.anim_player.current_animation)
+		print("  FAIL idle clip produced no bone movement")
 	print("%s: %d bones moved by the idle" % [sp, _moved.size()])
 	await _photo("idle")
 	j.ctrl.yaw = -PI * 0.5
@@ -268,7 +275,12 @@ func _hold_move(v: Vector2, s: float) -> void:
 
 func _deviation(j: Fighter, b: int) -> float:
 	var sk := j.model.skel
-	return rad_to_deg(sk.get_bone_pose_rotation(b).angle_to(sk.get_bone_rest(b).basis.get_rotation_quaternion()))
+	var pose := sk.get_bone_pose(b)
+	var rest := sk.get_bone_rest(b)
+	var rotation_delta := rad_to_deg(pose.basis.get_rotation_quaternion().angle_to(rest.basis.get_rotation_quaternion()))
+	var position_delta := pose.origin.distance_to(rest.origin) * 100.0
+	var scale_delta := pose.basis.get_scale().distance_to(rest.basis.get_scale()) * 100.0
+	return rotation_delta + position_delta + scale_delta
 
 
 func _is_weapon(sk: Skeleton3D, b: int) -> bool:
