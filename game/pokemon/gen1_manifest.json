@@ -1,0 +1,1872 @@
+{
+  "schema_version": 1,
+  "status": "asset_map_only_not_yet_converted_or_playable",
+  "source_repository": "https://github.com/Cobblemon-Global/Cobblemon",
+  "source_branch": "main",
+  "source_commit": "75bb1a6c2fe92ef54951fb68d16d21f290a9ee88",
+  "license": "Creative Commons Attribution-NonCommercial 3.0 Unported (model/texture assets)",
+  "license_file": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/license",
+  "note": "This file maps the 151 Kanto species to their upstream model, animation, normal texture and shiny texture files. It is an import manifest, not runtime-ready game assets. Geometry gender/form variants are retained in model_variants; the first selected model is the default import candidate.",
+  "pokemon": [
+    {
+      "dex": 1,
+      "id": "bulbasaur",
+      "folder": "0001_bulbasaur",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0001_bulbasaur/bulbasaur.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0001_bulbasaur/bulbasaur.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0001_bulbasaur/bulbasaur.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0001_bulbasaur/bulbasaur_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0001_bulbasaur/bulbasaur.geo.json"
+      ]
+    },
+    {
+      "dex": 2,
+      "id": "ivysaur",
+      "folder": "0002_ivysaur",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0002_ivysaur/ivysaur.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0002_ivysaur/ivysaur.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0002_ivysaur/ivysaur.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0002_ivysaur/ivysaur_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0002_ivysaur/ivysaur.geo.json"
+      ]
+    },
+    {
+      "dex": 3,
+      "id": "venusaur",
+      "folder": "0003_venusaur",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0003_venusaur/venusaur.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0003_venusaur/venusaur.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0003_venusaur/venusaur_male.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0003_venusaur/venusaur_male_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0003_venusaur/venusaur.geo.json"
+      ]
+    },
+    {
+      "dex": 4,
+      "id": "charmander",
+      "folder": "0004_charmander",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0004_charmander/charmander.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0004_charmander/charmander.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0004_charmander/charmander.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0004_charmander/charmander_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0004_charmander/charmander.geo.json"
+      ]
+    },
+    {
+      "dex": 5,
+      "id": "charmeleon",
+      "folder": "0005_charmeleon",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0005_charmeleon/charmeleon.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0005_charmeleon/charmeleon.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0005_charmeleon/charmeleon.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0005_charmeleon/charmeleon_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0005_charmeleon/charmeleon.geo.json"
+      ]
+    },
+    {
+      "dex": 6,
+      "id": "charizard",
+      "folder": "0006_charizard",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0006_charizard/charizard.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0006_charizard/charizard.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0006_charizard/charizard.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0006_charizard/charizard_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0006_charizard/charizard.geo.json"
+      ]
+    },
+    {
+      "dex": 7,
+      "id": "squirtle",
+      "folder": "0007_squirtle",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0007_squirtle/squirtle.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0007_squirtle/squirtle.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0007_squirtle/squirtle.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0007_squirtle/squirtle_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0007_squirtle/squirtle.geo.json"
+      ]
+    },
+    {
+      "dex": 8,
+      "id": "wartortle",
+      "folder": "0008_wartortle",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0008_wartortle/wartortle.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0008_wartortle/wartortle.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0008_wartortle/wartortle.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0008_wartortle/wartortle_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0008_wartortle/wartortle.geo.json"
+      ]
+    },
+    {
+      "dex": 9,
+      "id": "blastoise",
+      "folder": "0009_blastoise",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0009_blastoise/blastoise.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0009_blastoise/blastoise.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0009_blastoise/blastoise.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0009_blastoise/blastoise_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0009_blastoise/blastoise.geo.json"
+      ]
+    },
+    {
+      "dex": 10,
+      "id": "caterpie",
+      "folder": "0010_caterpie",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0010_caterpie/caterpie.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0010_caterpie/caterpie.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0010_caterpie/caterpie.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0010_caterpie/caterpie_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0010_caterpie/caterpie.geo.json"
+      ]
+    },
+    {
+      "dex": 11,
+      "id": "metapod",
+      "folder": "0011_metapod",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0011_metapod/metapod.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0011_metapod/metapod.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0011_metapod/metapod.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0011_metapod/metapod_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0011_metapod/metapod.geo.json"
+      ]
+    },
+    {
+      "dex": 12,
+      "id": "butterfree",
+      "folder": "0012_butterfree",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0012_butterfree/butterfree_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0012_butterfree/butterfree.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0012_butterfree/butterfree.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0012_butterfree/butterfree_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0012_butterfree/butterfree_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0012_butterfree/butterfree_male.geo.json"
+      ]
+    },
+    {
+      "dex": 13,
+      "id": "weedle",
+      "folder": "0013_weedle",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0013_weedle/weedle.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0013_weedle/weedle.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0013_weedle/weedle.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0013_weedle/weedle_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0013_weedle/weedle.geo.json"
+      ]
+    },
+    {
+      "dex": 14,
+      "id": "kakuna",
+      "folder": "0014_kakuna",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0014_kakuna/kakuna.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0014_kakuna/kakuna.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0014_kakuna/kakuna.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0014_kakuna/kakuna_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0014_kakuna/kakuna.geo.json"
+      ]
+    },
+    {
+      "dex": 15,
+      "id": "beedrill",
+      "folder": "0015_beedrill",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0015_beedrill/beedrill.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0015_beedrill/beedrill.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0015_beedrill/beedrill.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0015_beedrill/beedrill_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0015_beedrill/beedrill.geo.json"
+      ]
+    },
+    {
+      "dex": 16,
+      "id": "pidgey",
+      "folder": "0016_pidgey",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0016_pidgey/pidgey.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0016_pidgey/pidgey.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0016_pidgey/pidgey.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0016_pidgey/pidgey_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0016_pidgey/pidgey.geo.json"
+      ]
+    },
+    {
+      "dex": 17,
+      "id": "pidgeotto",
+      "folder": "0017_pidgeotto",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0017_pidgeotto/pidgeotto.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0017_pidgeotto/pidgeotto.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0017_pidgeotto/pidgeotto.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0017_pidgeotto/pidgeotto_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0017_pidgeotto/pidgeotto.geo.json"
+      ]
+    },
+    {
+      "dex": 18,
+      "id": "pidgeot",
+      "folder": "0018_pidgeot",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0018_pidgeot/pidgeot.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0018_pidgeot/pidgeot.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0018_pidgeot/pidgeot.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0018_pidgeot/pidgeot_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0018_pidgeot/pidgeot.geo.json"
+      ]
+    },
+    {
+      "dex": 19,
+      "id": "rattata",
+      "folder": "0019_rattata",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0019_rattata/rattata_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0019_rattata/rattata.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0019_rattata/rattata.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0019_rattata/rattata_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0019_rattata/rattata_alolan.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0019_rattata/rattata_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0019_rattata/rattata_male.geo.json"
+      ]
+    },
+    {
+      "dex": 20,
+      "id": "raticate",
+      "folder": "0020_raticate",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0020_raticate/raticate_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0020_raticate/raticate.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0020_raticate/raticate.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0020_raticate/raticate_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0020_raticate/raticate_alolan.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0020_raticate/raticate_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0020_raticate/raticate_male.geo.json"
+      ]
+    },
+    {
+      "dex": 21,
+      "id": "spearow",
+      "folder": "0021_spearow",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0021_spearow/spearow.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0021_spearow/spearow.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0021_spearow/spearow.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0021_spearow/spearow_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0021_spearow/spearow.geo.json"
+      ]
+    },
+    {
+      "dex": 22,
+      "id": "fearow",
+      "folder": "0022_fearow",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0022_fearow/fearow.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0022_fearow/fearow.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0022_fearow/fearow.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0022_fearow/fearow_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0022_fearow/fearow.geo.json"
+      ]
+    },
+    {
+      "dex": 23,
+      "id": "ekans",
+      "folder": "0023_ekans",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0023_ekans/ekans.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0023_ekans/ekans.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0023_ekans/ekans.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0023_ekans/ekans_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0023_ekans/ekans.geo.json"
+      ]
+    },
+    {
+      "dex": 24,
+      "id": "arbok",
+      "folder": "0024_arbok",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0024_arbok/arbok.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0024_arbok/arbok.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0024_arbok/arbok.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0024_arbok/arbok_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0024_arbok/arbok.geo.json"
+      ]
+    },
+    {
+      "dex": 25,
+      "id": "pikachu",
+      "folder": "0025_pikachu",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0025_pikachu/pikachu_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0025_pikachu/pikachu.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0025_pikachu/pikachu.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0025_pikachu/pikachu_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0025_pikachu/pikachu_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0025_pikachu/pikachu_male.geo.json"
+      ]
+    },
+    {
+      "dex": 26,
+      "id": "raichu",
+      "folder": "0026_raichu",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0026_raichu/raichu_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0026_raichu/raichu.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0026_raichu/raichu.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0026_raichu/raichu_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0026_raichu/raichu_alolan.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0026_raichu/raichu_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0026_raichu/raichu_male.geo.json"
+      ]
+    },
+    {
+      "dex": 27,
+      "id": "sandshrew",
+      "folder": "0027_sandshrew",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0027_sandshrew/sandshrew.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0027_sandshrew/sandshrew.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0027_sandshrew/sandshrew.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0027_sandshrew/sandshrew_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0027_sandshrew/sandshrew.geo.json"
+      ]
+    },
+    {
+      "dex": 28,
+      "id": "sandslash",
+      "folder": "0028_sandslash",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0028_sandslash/sandslash.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0028_sandslash/sandslash.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0028_sandslash/sandslash.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0028_sandslash/sandslash_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0028_sandslash/sandslash.geo.json"
+      ]
+    },
+    {
+      "dex": 29,
+      "id": "nidoranf",
+      "folder": "0029_nidoranf",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0029_nidoranf/nidoranf.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0029_nidoranf/nidoranf.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0029_nidoranf/nidoranf.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0029_nidoranf/nidoranf_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0029_nidoranf/nidoranf.geo.json"
+      ]
+    },
+    {
+      "dex": 30,
+      "id": "nidorina",
+      "folder": "0030_nidorina",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0030_nidorina/nidorina.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0030_nidorina/nidorina.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0030_nidorina/nidorina.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0030_nidorina/nidorina_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0030_nidorina/nidorina.geo.json"
+      ]
+    },
+    {
+      "dex": 31,
+      "id": "nidoqueen",
+      "folder": "0031_nidoqueen",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0031_nidoqueen/nidoqueen.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0031_nidoqueen/nidoqueen.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0031_nidoqueen/nidoqueen.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0031_nidoqueen/nidoqueen_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0031_nidoqueen/nidoqueen.geo.json"
+      ]
+    },
+    {
+      "dex": 32,
+      "id": "nidoranm",
+      "folder": "0032_nidoranm",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0032_nidoranm/nidoranm.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0032_nidoranm/nidoranm.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0032_nidoranm/nidoranm.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0032_nidoranm/nidoranm_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0032_nidoranm/nidoranm.geo.json"
+      ]
+    },
+    {
+      "dex": 33,
+      "id": "nidorino",
+      "folder": "0033_nidorino",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0033_nidorino/nidorino.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0033_nidorino/nidorino.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0033_nidorino/nidorino.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0033_nidorino/nidorino_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0033_nidorino/nidorino.geo.json"
+      ]
+    },
+    {
+      "dex": 34,
+      "id": "nidoking",
+      "folder": "0034_nidoking",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0034_nidoking/nidoking.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0034_nidoking/nidoking.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0034_nidoking/nidoking.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0034_nidoking/nidoking_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0034_nidoking/nidoking.geo.json"
+      ]
+    },
+    {
+      "dex": 35,
+      "id": "clefairy",
+      "folder": "0035_clefairy",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0035_clefairy/clefairy.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0035_clefairy/clefairy.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0035_clefairy/clefairy.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0035_clefairy/clefairy_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0035_clefairy/clefairy.geo.json"
+      ]
+    },
+    {
+      "dex": 36,
+      "id": "clefable",
+      "folder": "0036_clefable",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0036_clefable/clefable.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0036_clefable/clefable.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0036_clefable/clefable.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0036_clefable/clefable_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0036_clefable/clefable.geo.json"
+      ]
+    },
+    {
+      "dex": 37,
+      "id": "vulpix",
+      "folder": "0037_vulpix",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0037_vulpix/vulpix.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0037_vulpix/vulpix.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0037_vulpix/vulpix.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0037_vulpix/vulpix_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0037_vulpix/vulpix.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0037_vulpix/vulpix_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 38,
+      "id": "ninetales",
+      "folder": "0038_ninetales",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0038_ninetales/ninetales.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0038_ninetales/ninetales.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0038_ninetales/ninetales.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0038_ninetales/ninetales_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0038_ninetales/ninetales.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0038_ninetales/ninetales_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 39,
+      "id": "jigglypuff",
+      "folder": "0039_jigglypuff",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0039_jigglypuff/jigglypuff.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0039_jigglypuff/jigglypuff.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0039_jigglypuff/jigglypuff.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0039_jigglypuff/jigglypuff_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0039_jigglypuff/jigglypuff.geo.json"
+      ]
+    },
+    {
+      "dex": 40,
+      "id": "wigglytuff",
+      "folder": "0040_wigglytuff",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0040_wigglytuff/wigglytuff.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0040_wigglytuff/wigglytuff.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0040_wigglytuff/wigglytuff.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0040_wigglytuff/wigglytuff_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0040_wigglytuff/wigglytuff.geo.json"
+      ]
+    },
+    {
+      "dex": 41,
+      "id": "zubat",
+      "folder": "0041_zubat",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0041_zubat/zubat_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0041_zubat/zubat.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0041_zubat/zubat.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0041_zubat/zubat_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0041_zubat/zubat_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0041_zubat/zubat_male.geo.json"
+      ]
+    },
+    {
+      "dex": 42,
+      "id": "golbat",
+      "folder": "0042_golbat",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0042_golbat/golbat_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0042_golbat/golbat.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0042_golbat/golbat.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0042_golbat/golbat_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0042_golbat/golbat_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0042_golbat/golbat_male.geo.json"
+      ]
+    },
+    {
+      "dex": 43,
+      "id": "oddish",
+      "folder": "0043_oddish",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0043_oddish/oddish.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0043_oddish/oddish.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0043_oddish/oddish.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0043_oddish/oddish_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0043_oddish/oddish.geo.json"
+      ]
+    },
+    {
+      "dex": 44,
+      "id": "gloom",
+      "folder": "0044_gloom",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0044_gloom/gloom_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0044_gloom/gloom.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0044_gloom/gloom.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0044_gloom/gloom_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0044_gloom/gloom_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0044_gloom/gloom_male.geo.json"
+      ]
+    },
+    {
+      "dex": 45,
+      "id": "vileplume",
+      "folder": "0045_vileplume",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0045_vileplume/vileplume.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0045_vileplume/vileplume.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0045_vileplume/vileplume_male.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0045_vileplume/vileplume_male_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0045_vileplume/vileplume.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0045_vileplume/vileplume_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0045_vileplume/vileplume_male.geo.json"
+      ]
+    },
+    {
+      "dex": 46,
+      "id": "paras",
+      "folder": "0046_paras",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0046_paras/paras.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0046_paras/paras.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0046_paras/paras.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0046_paras/paras_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0046_paras/paras.geo.json"
+      ]
+    },
+    {
+      "dex": 47,
+      "id": "parasect",
+      "folder": "0047_parasect",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0047_parasect/parasect.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0047_parasect/parasect.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0047_parasect/parasect.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0047_parasect/parasect_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0047_parasect/parasect.geo.json"
+      ]
+    },
+    {
+      "dex": 48,
+      "id": "venonat",
+      "folder": "0048_venonat",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0048_venonat/venonat.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0048_venonat/venonat.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0048_venonat/venonat.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0048_venonat/venonat_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0048_venonat/venonat.geo.json"
+      ]
+    },
+    {
+      "dex": 49,
+      "id": "venomoth",
+      "folder": "0049_venomoth",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0049_venomoth/venomoth.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0049_venomoth/venomoth.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0049_venomoth/venomoth.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0049_venomoth/venomoth_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0049_venomoth/venomoth.geo.json"
+      ]
+    },
+    {
+      "dex": 50,
+      "id": "diglett",
+      "folder": "0050_diglett",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0050_diglett/diglett.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0050_diglett/diglett.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0050_diglett/diglett.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0050_diglett/diglett_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0050_diglett/diglett.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0050_diglett/diglett_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 51,
+      "id": "dugtrio",
+      "folder": "0051_dugtrio",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0051_dugtrio/dugtrio.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0051_dugtrio/dugtrio.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0051_dugtrio/dugtrio.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0051_dugtrio/dugtrio_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0051_dugtrio/dugtrio.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0051_dugtrio/dugtrio_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 52,
+      "id": "meowth",
+      "folder": "0052_meowth",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0052_meowth/meowth.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0052_meowth/meowth.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0052_meowth/meowth.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0052_meowth/meowth_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0052_meowth/meowth.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0052_meowth/meowth_alolan.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0052_meowth/meowth_galarian.geo.json"
+      ]
+    },
+    {
+      "dex": 53,
+      "id": "persian",
+      "folder": "0053_persian",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0053_persian/persian.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0053_persian/persian.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0053_persian/persian.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0053_persian/persian_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0053_persian/persian.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0053_persian/persian_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 54,
+      "id": "psyduck",
+      "folder": "0054_psyduck",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0054_psyduck/psyduck.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0054_psyduck/psyduck.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0054_psyduck/psyduck.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0054_psyduck/psyduck_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0054_psyduck/psyduck.geo.json"
+      ]
+    },
+    {
+      "dex": 55,
+      "id": "golduck",
+      "folder": "0055_golduck",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0055_golduck/golduck.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0055_golduck/golduck.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0055_golduck/golduck.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0055_golduck/golduck_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0055_golduck/golduck.geo.json"
+      ]
+    },
+    {
+      "dex": 56,
+      "id": "mankey",
+      "folder": "0056_mankey",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0056_mankey/mankey.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0056_mankey/mankey.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0056_mankey/mankey.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0056_mankey/mankey_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0056_mankey/mankey.geo.json"
+      ]
+    },
+    {
+      "dex": 57,
+      "id": "primeape",
+      "folder": "0057_primeape",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0057_primeape/primeape.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0057_primeape/primeape.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0057_primeape/primeape.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0057_primeape/primeape_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0057_primeape/primeape.geo.json"
+      ]
+    },
+    {
+      "dex": 58,
+      "id": "growlithe",
+      "folder": "0058_growlithe",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0058_growlithe/growlithe.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0058_growlithe/growlithe.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0058_growlithe/growlithe.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0058_growlithe/growlithe_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0058_growlithe/growlithe.geo.json"
+      ]
+    },
+    {
+      "dex": 59,
+      "id": "arcanine",
+      "folder": "0059_arcanine",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0059_arcanine/arcanine.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0059_arcanine/arcanine.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0059_arcanine/arcanine.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0059_arcanine/arcanine_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0059_arcanine/arcanine.geo.json"
+      ]
+    },
+    {
+      "dex": 60,
+      "id": "poliwag",
+      "folder": "0060_poliwag",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0060_poliwag/poliwag.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0060_poliwag/poliwag.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0060_poliwag/poliwag.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0060_poliwag/poliwag_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0060_poliwag/poliwag.geo.json"
+      ]
+    },
+    {
+      "dex": 61,
+      "id": "poliwhirl",
+      "folder": "0061_poliwhirl",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0061_poliwhirl/poliwhirl.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0061_poliwhirl/poliwhirl.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0061_poliwhirl/poliwhirl.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0061_poliwhirl/poliwhirl_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0061_poliwhirl/poliwhirl.geo.json"
+      ]
+    },
+    {
+      "dex": 62,
+      "id": "poliwrath",
+      "folder": "0062_poliwrath",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0062_poliwrath/poliwrath.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0062_poliwrath/poliwrath.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0062_poliwrath/poliwrath.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0062_poliwrath/poliwrath_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0062_poliwrath/poliwrath.geo.json"
+      ]
+    },
+    {
+      "dex": 63,
+      "id": "abra",
+      "folder": "0063_abra",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0063_abra/abra.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0063_abra/abra.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0063_abra/abra.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0063_abra/abra_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0063_abra/abra.geo.json"
+      ]
+    },
+    {
+      "dex": 64,
+      "id": "kadabra",
+      "folder": "0064_kadabra",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0064_kadabra/kadabra_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0064_kadabra/kadabra.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0064_kadabra/kadabra.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0064_kadabra/kadabra_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0064_kadabra/kadabra_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0064_kadabra/kadabra_male.geo.json"
+      ]
+    },
+    {
+      "dex": 65,
+      "id": "alakazam",
+      "folder": "0065_alakazam",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0065_alakazam/alakazam_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0065_alakazam/alakazam.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0065_alakazam/alakazam.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0065_alakazam/alakazam_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0065_alakazam/alakazam_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0065_alakazam/alakazam_male.geo.json"
+      ]
+    },
+    {
+      "dex": 66,
+      "id": "machop",
+      "folder": "0066_machop",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0066_machop/machop.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0066_machop/machop.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0066_machop/machop.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0066_machop/machop_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0066_machop/machop.geo.json"
+      ]
+    },
+    {
+      "dex": 67,
+      "id": "machoke",
+      "folder": "0067_machoke",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0067_machoke/machoke.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0067_machoke/machoke.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0067_machoke/machoke.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0067_machoke/machoke_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0067_machoke/machoke.geo.json"
+      ]
+    },
+    {
+      "dex": 68,
+      "id": "machamp",
+      "folder": "0068_machamp",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0068_machamp/machamp.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0068_machamp/machamp.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0068_machamp/machamp.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0068_machamp/machamp_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0068_machamp/machamp.geo.json"
+      ]
+    },
+    {
+      "dex": 69,
+      "id": "bellsprout",
+      "folder": "0069_bellsprout",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0069_bellsprout/bellsprout.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0069_bellsprout/bellsprout.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0069_bellsprout/bellsprout.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0069_bellsprout/bellsprout_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0069_bellsprout/bellsprout.geo.json"
+      ]
+    },
+    {
+      "dex": 70,
+      "id": "weepinbell",
+      "folder": "0070_weepinbell",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0070_weepinbell/weepinbell.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0070_weepinbell/weepinbell.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0070_weepinbell/weepinbell.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0070_weepinbell/weepinbell_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0070_weepinbell/weepinbell.geo.json"
+      ]
+    },
+    {
+      "dex": 71,
+      "id": "victreebel",
+      "folder": "0071_victreebel",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0071_victreebel/victreebel.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0071_victreebel/victreebel.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0071_victreebel/victreebel.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0071_victreebel/victreebel_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0071_victreebel/victreebel.geo.json"
+      ]
+    },
+    {
+      "dex": 72,
+      "id": "tentacool",
+      "folder": "0072_tentacool",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0072_tentacool/tentacool.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0072_tentacool/tentacool.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0072_tentacool/tentacool.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0072_tentacool/tentacool_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0072_tentacool/tentacool.geo.json"
+      ]
+    },
+    {
+      "dex": 73,
+      "id": "tentacruel",
+      "folder": "0073_tentacruel",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0073_tentacruel/tentacruel.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0073_tentacruel/tentacruel.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0073_tentacruel/tentacruel.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0073_tentacruel/tentacruel_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0073_tentacruel/tentacruel.geo.json"
+      ]
+    },
+    {
+      "dex": 74,
+      "id": "geodude",
+      "folder": "0074_geodude",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0074_geodude/geodude.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0074_geodude/geodude.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0074_geodude/geodude.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0074_geodude/geodude_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0074_geodude/geodude.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0074_geodude/geodude_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 75,
+      "id": "graveler",
+      "folder": "0075_graveler",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0075_graveler/graveler.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0075_graveler/graveler.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0075_graveler/graveler.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0075_graveler/graveler_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0075_graveler/graveler.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0075_graveler/graveler_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 76,
+      "id": "golem",
+      "folder": "0076_golem",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0076_golem/golem.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0076_golem/golem.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0076_golem/golem.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0076_golem/golem_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0076_golem/golem.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0076_golem/golem_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 77,
+      "id": "ponyta",
+      "folder": "0077_ponyta",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0077_ponyta/ponyta.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0077_ponyta/ponyta.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0077_ponyta/ponyta.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0077_ponyta/ponyta_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0077_ponyta/ponyta.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0077_ponyta/ponyta_galar.geo.json"
+      ]
+    },
+    {
+      "dex": 78,
+      "id": "rapidash",
+      "folder": "0078_rapidash",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0078_rapidash/rapidash.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0078_rapidash/rapidash.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0078_rapidash/rapidash.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0078_rapidash/rapidash_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0078_rapidash/rapidash.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0078_rapidash/rapidash_galar.geo.json"
+      ]
+    },
+    {
+      "dex": 79,
+      "id": "slowpoke",
+      "folder": "0079_slowpoke",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0079_slowpoke/slowpoke.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0079_slowpoke/slowpoke.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0079_slowpoke/slowpoke.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0079_slowpoke/slowpoke_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0079_slowpoke/slowpoke.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0079_slowpoke/slowpoke_galarian.geo.json"
+      ]
+    },
+    {
+      "dex": 80,
+      "id": "slowbro",
+      "folder": "0080_slowbro",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0080_slowbro/slowbro.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0080_slowbro/slowbro.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0080_slowbro/slowbro.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0080_slowbro/slowbro_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0080_slowbro/slowbro.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0080_slowbro/slowbro_galarian.geo.json"
+      ]
+    },
+    {
+      "dex": 81,
+      "id": "magnemite",
+      "folder": "0081_magnemite",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0081_magnemite/magnemite.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0081_magnemite/magnemite.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0081_magnemite/magnemite.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0081_magnemite/magnemite_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0081_magnemite/magnemite.geo.json"
+      ]
+    },
+    {
+      "dex": 82,
+      "id": "magneton",
+      "folder": "0082_magneton",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0082_magneton/magneton.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0082_magneton/magneton.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0082_magneton/magneton.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0082_magneton/magneton_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0082_magneton/magneton.geo.json"
+      ]
+    },
+    {
+      "dex": 83,
+      "id": "farfetchd",
+      "folder": "0083_farfetchd",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0083_farfetchd/farfetchd.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0083_farfetchd/farfetchd.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0083_farfetchd/farfetchd.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0083_farfetchd/farfetchd_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0083_farfetchd/farfetchd.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0083_farfetchd/farfetchd_galar.geo.json"
+      ]
+    },
+    {
+      "dex": 84,
+      "id": "doduo",
+      "folder": "0084_doduo",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0084_doduo/doduo_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0084_doduo/doduo.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0084_doduo/doduo.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0084_doduo/doduo_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0084_doduo/doduo_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0084_doduo/doduo_male.geo.json"
+      ]
+    },
+    {
+      "dex": 85,
+      "id": "dodrio",
+      "folder": "0085_dodrio",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0085_dodrio/dodrio_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0085_dodrio/dodrio.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0085_dodrio/dodrio.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0085_dodrio/dodrio_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0085_dodrio/dodrio_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0085_dodrio/dodrio_male.geo.json"
+      ]
+    },
+    {
+      "dex": 86,
+      "id": "seel",
+      "folder": "0086_seel",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0086_seel/seel.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0086_seel/seel.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0086_seel/seel.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0086_seel/seel_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0086_seel/seel.geo.json"
+      ]
+    },
+    {
+      "dex": 87,
+      "id": "dewgong",
+      "folder": "0087_dewgong",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0087_dewgong/dewgong.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0087_dewgong/dewgong.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0087_dewgong/dewgong.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0087_dewgong/dewgong_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0087_dewgong/dewgong.geo.json"
+      ]
+    },
+    {
+      "dex": 88,
+      "id": "grimer",
+      "folder": "0088_grimer",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0088_grimer/grimer.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0088_grimer/grimer.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0088_grimer/grimer.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0088_grimer/grimer_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0088_grimer/grimer.geo.json"
+      ]
+    },
+    {
+      "dex": 89,
+      "id": "muk",
+      "folder": "0089_muk",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0089_muk/muk.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0089_muk/muk.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0089_muk/muk.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0089_muk/muk_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0089_muk/muk.geo.json"
+      ]
+    },
+    {
+      "dex": 90,
+      "id": "shellder",
+      "folder": "0090_shellder",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0090_shellder/shellder.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0090_shellder/shellder.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0090_shellder/shellder.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0090_shellder/shellder_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0090_shellder/shellder.geo.json"
+      ]
+    },
+    {
+      "dex": 91,
+      "id": "cloyster",
+      "folder": "0091_cloyster",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0091_cloyster/cloyster.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0091_cloyster/cloyster.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0091_cloyster/cloyster.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0091_cloyster/cloyster_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0091_cloyster/cloyster.geo.json"
+      ]
+    },
+    {
+      "dex": 92,
+      "id": "gastly",
+      "folder": "0092_gastly",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0092_gastly/gastly.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0092_gastly/gastly.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0092_gastly/gastly.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0092_gastly/gastly_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0092_gastly/gastly.geo.json"
+      ]
+    },
+    {
+      "dex": 93,
+      "id": "haunter",
+      "folder": "0093_haunter",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0093_haunter/haunter.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0093_haunter/haunter.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0093_haunter/haunter.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0093_haunter/haunter_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0093_haunter/haunter.geo.json"
+      ]
+    },
+    {
+      "dex": 94,
+      "id": "gengar",
+      "folder": "0094_gengar",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0094_gengar/gengar.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0094_gengar/gengar.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0094_gengar/gengar.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0094_gengar/gengar_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0094_gengar/gengar.geo.json"
+      ]
+    },
+    {
+      "dex": 95,
+      "id": "onix",
+      "folder": "0095_onix",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0095_onix/onix.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0095_onix/onix.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0095_onix/onix.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0095_onix/onix_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0095_onix/onix.geo.json"
+      ]
+    },
+    {
+      "dex": 96,
+      "id": "drowzee",
+      "folder": "0096_drowzee",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0096_drowzee/drowzee.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0096_drowzee/drowzee.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0096_drowzee/drowzee.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0096_drowzee/drowzee_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0096_drowzee/drowzee.geo.json"
+      ]
+    },
+    {
+      "dex": 97,
+      "id": "hypno",
+      "folder": "0097_hypno",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0097_hypno/hypno_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0097_hypno/hypno.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0097_hypno/hypno.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0097_hypno/hypno_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0097_hypno/hypno_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0097_hypno/hypno_male.geo.json"
+      ]
+    },
+    {
+      "dex": 98,
+      "id": "krabby",
+      "folder": "0098_krabby",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0098_krabby/krabby.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0098_krabby/krabby.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0098_krabby/krabby.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0098_krabby/krabby_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0098_krabby/krabby.geo.json"
+      ]
+    },
+    {
+      "dex": 99,
+      "id": "kingler",
+      "folder": "0099_kingler",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0099_kingler/kingler.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0099_kingler/kingler.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0099_kingler/kingler.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0099_kingler/kingler_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0099_kingler/kingler.geo.json"
+      ]
+    },
+    {
+      "dex": 100,
+      "id": "voltorb",
+      "folder": "0100_voltorb",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0100_voltorb/voltorb.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0100_voltorb/voltorb.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0100_voltorb/voltorb.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0100_voltorb/voltorb_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0100_voltorb/voltorb.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0100_voltorb/voltorb_hisuian.geo.json"
+      ]
+    },
+    {
+      "dex": 101,
+      "id": "electrode",
+      "folder": "0101_electrode",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0101_electrode/electrode.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0101_electrode/electrode.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0101_electrode/electrode.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0101_electrode/electrode_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0101_electrode/electrode.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0101_electrode/electrode_hisuian.geo.json"
+      ]
+    },
+    {
+      "dex": 102,
+      "id": "exeggcute",
+      "folder": "0102_exeggcute",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0102_exeggcute/exeggcute.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0102_exeggcute/exeggcute.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0102_exeggcute/exeggcute.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0102_exeggcute/exeggcute_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0102_exeggcute/exeggcute.geo.json"
+      ]
+    },
+    {
+      "dex": 103,
+      "id": "exeggutor",
+      "folder": "0103_exeggutor",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0103_exeggutor/exeggutor.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0103_exeggutor/exeggutor.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0103_exeggutor/exeggutor.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0103_exeggutor/exeggutor_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0103_exeggutor/exeggutor.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0103_exeggutor/exeggutor_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 104,
+      "id": "cubone",
+      "folder": "0104_cubone",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0104_cubone/cubone.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0104_cubone/cubone.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0104_cubone/cubone.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0104_cubone/cubone_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0104_cubone/cubone.geo.json"
+      ]
+    },
+    {
+      "dex": 105,
+      "id": "marowak",
+      "folder": "0105_marowak",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0105_marowak/marowak.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0105_marowak/marowak.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0105_marowak/marowak.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0105_marowak/marowak_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0105_marowak/marowak.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0105_marowak/marowak_alolan.geo.json"
+      ]
+    },
+    {
+      "dex": 106,
+      "id": "hitmonlee",
+      "folder": "0106_hitmonlee",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0106_hitmonlee/hitmonlee.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0106_hitmonlee/hitmonlee.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0106_hitmonlee/hitmonlee.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0106_hitmonlee/hitmonlee_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0106_hitmonlee/hitmonlee.geo.json"
+      ]
+    },
+    {
+      "dex": 107,
+      "id": "hitmonchan",
+      "folder": "0107_hitmonchan",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0107_hitmonchan/hitmonchan.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0107_hitmonchan/hitmonchan.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0107_hitmonchan/hitmonchan.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0107_hitmonchan/hitmonchan_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0107_hitmonchan/hitmonchan.geo.json"
+      ]
+    },
+    {
+      "dex": 108,
+      "id": "lickitung",
+      "folder": "0108_lickitung",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0108_lickitung/lickitung.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0108_lickitung/lickitung.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0108_lickitung/lickitung.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0108_lickitung/lickitung_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0108_lickitung/lickitung.geo.json"
+      ]
+    },
+    {
+      "dex": 109,
+      "id": "koffing",
+      "folder": "0109_koffing",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0109_koffing/koffing.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0109_koffing/koffing.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0109_koffing/koffing.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0109_koffing/koffing_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0109_koffing/koffing.geo.json"
+      ]
+    },
+    {
+      "dex": 110,
+      "id": "weezing",
+      "folder": "0110_weezing",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0110_weezing/weezing.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0110_weezing/weezing.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0110_weezing/weezing.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0110_weezing/weezing_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0110_weezing/weezing.geo.json"
+      ]
+    },
+    {
+      "dex": 111,
+      "id": "rhyhorn",
+      "folder": "0111_rhyhorn",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0111_rhyhorn/rhyhorn_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0111_rhyhorn/rhyhorn.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0111_rhyhorn/rhyhorn.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0111_rhyhorn/rhyhorn_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0111_rhyhorn/rhyhorn_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0111_rhyhorn/rhyhorn_male.geo.json"
+      ]
+    },
+    {
+      "dex": 112,
+      "id": "rhydon",
+      "folder": "0112_rhydon",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0112_rhydon/rhydon_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0112_rhydon/rhydon.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0112_rhydon/rhydon.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0112_rhydon/rhydon_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0112_rhydon/rhydon_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0112_rhydon/rhydon_male.geo.json"
+      ]
+    },
+    {
+      "dex": 113,
+      "id": "chansey",
+      "folder": "0113_chansey",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0113_chansey/chansey.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0113_chansey/chansey.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0113_chansey/chansey.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0113_chansey/chansey_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0113_chansey/chansey.geo.json"
+      ]
+    },
+    {
+      "dex": 114,
+      "id": "tangela",
+      "folder": "0114_tangela",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0114_tangela/tangela.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0114_tangela/tangela.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0114_tangela/tangela.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0114_tangela/tangela_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0114_tangela/tangela.geo.json"
+      ]
+    },
+    {
+      "dex": 115,
+      "id": "kangaskhan",
+      "folder": "0115_kangaskhan",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0115_kangaskhan/kangaskhan.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0115_kangaskhan/kangaskhan.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0115_kangaskhan/kangaskhan.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0115_kangaskhan/kangaskhan_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0115_kangaskhan/kangaskhan.geo.json"
+      ]
+    },
+    {
+      "dex": 116,
+      "id": "horsea",
+      "folder": "0116_horsea",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0116_horsea/horsea.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0116_horsea/horsea.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0116_horsea/horsea.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0116_horsea/horsea_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0116_horsea/horsea.geo.json"
+      ]
+    },
+    {
+      "dex": 117,
+      "id": "seadra",
+      "folder": "0117_seadra",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0117_seadra/seadra.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0117_seadra/seadra.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0117_seadra/seadra.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0117_seadra/seadra_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0117_seadra/seadra.geo.json"
+      ]
+    },
+    {
+      "dex": 118,
+      "id": "goldeen",
+      "folder": "0118_goldeen",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0118_goldeen/goldeen_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0118_goldeen/goldeen.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0118_goldeen/goldeen.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0118_goldeen/goldeen_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0118_goldeen/goldeen_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0118_goldeen/goldeen_male.geo.json"
+      ]
+    },
+    {
+      "dex": 119,
+      "id": "seaking",
+      "folder": "0119_seaking",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0119_seaking/seaking_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0119_seaking/seaking.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0119_seaking/seaking.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0119_seaking/seaking_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0119_seaking/seaking_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0119_seaking/seaking_male.geo.json"
+      ]
+    },
+    {
+      "dex": 120,
+      "id": "staryu",
+      "folder": "0120_staryu",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0120_staryu/staryu.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0120_staryu/staryu.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0120_staryu/staryu.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0120_staryu/staryu_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0120_staryu/staryu.geo.json"
+      ]
+    },
+    {
+      "dex": 121,
+      "id": "starmie",
+      "folder": "0121_starmie",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0121_starmie/starmie.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0121_starmie/starmie.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0121_starmie/starmie.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0121_starmie/starmie_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0121_starmie/starmie.geo.json"
+      ]
+    },
+    {
+      "dex": 122,
+      "id": "mrmime",
+      "folder": "0122_mrmime",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0122_mrmime/mr_mime.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0122_mrmime/mr_mime.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0122_mrmime/mr_mime.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0122_mrmime/mr_mime_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0122_mrmime/mr_mime.geo.json"
+      ]
+    },
+    {
+      "dex": 123,
+      "id": "scyther",
+      "folder": "0123_scyther",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0123_scyther/scyther_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0123_scyther/scyther.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0123_scyther/scyther.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0123_scyther/scyther_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0123_scyther/scyther_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0123_scyther/scyther_male.geo.json"
+      ]
+    },
+    {
+      "dex": 124,
+      "id": "jynx",
+      "folder": "0124_jynx",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0124_jynx/jynx.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0124_jynx/jynx.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0124_jynx/jynx.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0124_jynx/jynx_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0124_jynx/jynx.geo.json"
+      ]
+    },
+    {
+      "dex": 125,
+      "id": "electabuzz",
+      "folder": "0125_electabuzz",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0125_electabuzz/electabuzz.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0125_electabuzz/electabuzz.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0125_electabuzz/electabuzz.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0125_electabuzz/electabuzz_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0125_electabuzz/electabuzz.geo.json"
+      ]
+    },
+    {
+      "dex": 126,
+      "id": "magmar",
+      "folder": "0126_magmar",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0126_magmar/magmar.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0126_magmar/magmar.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0126_magmar/magmar.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0126_magmar/magmar_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0126_magmar/magmar.geo.json"
+      ]
+    },
+    {
+      "dex": 127,
+      "id": "pinsir",
+      "folder": "0127_pinsir",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0127_pinsir/pinsir.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0127_pinsir/pinsir.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0127_pinsir/pinsir.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0127_pinsir/pinsir_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0127_pinsir/pinsir.geo.json"
+      ]
+    },
+    {
+      "dex": 128,
+      "id": "tauros",
+      "folder": "0128_tauros",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0128_tauros/tauros.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0128_tauros/tauros.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0128_tauros/tauros.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0128_tauros/tauros_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0128_tauros/tauros.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0128_tauros/tauros_paldean_aqua.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0128_tauros/tauros_paldean_blaze.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0128_tauros/tauros_paldean_combat.geo.json"
+      ]
+    },
+    {
+      "dex": 129,
+      "id": "magikarp",
+      "folder": "0129_magikarp",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0129_magikarp/magikarp_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0129_magikarp/magikarp.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0129_magikarp/magikarp.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0129_magikarp/magikarp_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0129_magikarp/magikarp_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0129_magikarp/magikarp_male.geo.json"
+      ]
+    },
+    {
+      "dex": 130,
+      "id": "gyarados",
+      "folder": "0130_gyarados",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0130_gyarados/gyarados_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0130_gyarados/gyarados.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0130_gyarados/gyarados.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0130_gyarados/gyarados_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0130_gyarados/gyarados_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0130_gyarados/gyarados_male.geo.json"
+      ]
+    },
+    {
+      "dex": 131,
+      "id": "lapras",
+      "folder": "0131_lapras",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0131_lapras/lapras.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0131_lapras/lapras.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0131_lapras/lapras.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0131_lapras/lapras_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0131_lapras/lapras.geo.json"
+      ]
+    },
+    {
+      "dex": 132,
+      "id": "ditto",
+      "folder": "0132_ditto",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0132_ditto/ditto.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0132_ditto/ditto.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0132_ditto/ditto.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0132_ditto/ditto_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0132_ditto/ditto.geo.json"
+      ]
+    },
+    {
+      "dex": 133,
+      "id": "eevee",
+      "folder": "0133_eevee",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0133_eevee/eevee_male.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0133_eevee/eevee.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0133_eevee/eevee.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0133_eevee/eevee_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0133_eevee/eevee_female.geo.json",
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0133_eevee/eevee_male.geo.json"
+      ]
+    },
+    {
+      "dex": 134,
+      "id": "vaporeon",
+      "folder": "0134_vaporeon",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0134_vaporeon/vaporeon.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0134_vaporeon/vaporeon.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0134_vaporeon/vaporeon.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0134_vaporeon/vaporeon_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0134_vaporeon/vaporeon.geo.json"
+      ]
+    },
+    {
+      "dex": 135,
+      "id": "jolteon",
+      "folder": "0135_jolteon",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0135_jolteon/jolteon.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0135_jolteon/jolteon.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0135_jolteon/jolteon.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0135_jolteon/jolteon_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0135_jolteon/jolteon.geo.json"
+      ]
+    },
+    {
+      "dex": 136,
+      "id": "flareon",
+      "folder": "0136_flareon",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0136_flareon/flareon.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0136_flareon/flareon.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0136_flareon/flareon.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0136_flareon/flareon_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0136_flareon/flareon.geo.json"
+      ]
+    },
+    {
+      "dex": 137,
+      "id": "porygon",
+      "folder": "0137_porygon",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0137_porygon/porygon.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0137_porygon/porygon.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0137_porygon/porygon.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0137_porygon/porygon_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0137_porygon/porygon.geo.json"
+      ]
+    },
+    {
+      "dex": 138,
+      "id": "omanyte",
+      "folder": "0138_omanyte",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0138_omanyte/omanyte.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0138_omanyte/omanyte.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0138_omanyte/omanyte.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0138_omanyte/omanyte_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0138_omanyte/omanyte.geo.json"
+      ]
+    },
+    {
+      "dex": 139,
+      "id": "omastar",
+      "folder": "0139_omastar",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0139_omastar/omastar.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0139_omastar/omastar.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0139_omastar/omastar.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0139_omastar/omastar_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0139_omastar/omastar.geo.json"
+      ]
+    },
+    {
+      "dex": 140,
+      "id": "kabuto",
+      "folder": "0140_kabuto",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0140_kabuto/kabuto.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0140_kabuto/kabuto.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0140_kabuto/kabuto.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0140_kabuto/kabuto_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0140_kabuto/kabuto.geo.json"
+      ]
+    },
+    {
+      "dex": 141,
+      "id": "kabutops",
+      "folder": "0141_kabutops",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0141_kabutops/kabutops.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0141_kabutops/kabutops.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0141_kabutops/kabutops.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0141_kabutops/kabutops_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0141_kabutops/kabutops.geo.json"
+      ]
+    },
+    {
+      "dex": 142,
+      "id": "aerodactyl",
+      "folder": "0142_aerodactyl",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0142_aerodactyl/aerodactyl.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0142_aerodactyl/aerodactyl.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0142_aerodactyl/aerodactyl.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0142_aerodactyl/aerodactyl_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0142_aerodactyl/aerodactyl.geo.json"
+      ]
+    },
+    {
+      "dex": 143,
+      "id": "snorlax",
+      "folder": "0143_snorlax",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0143_snorlax/snorlax.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0143_snorlax/snorlax.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0143_snorlax/snorlax.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0143_snorlax/snorlax_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0143_snorlax/snorlax.geo.json"
+      ]
+    },
+    {
+      "dex": 144,
+      "id": "articuno",
+      "folder": "0144_articuno",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0144_articuno/articuno.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0144_articuno/articuno.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0144_articuno/articuno.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0144_articuno/articuno_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0144_articuno/articuno.geo.json"
+      ]
+    },
+    {
+      "dex": 145,
+      "id": "zapdos",
+      "folder": "0145_zapdos",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0145_zapdos/zapdos.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0145_zapdos/zapdos.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0145_zapdos/zapdos.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0145_zapdos/zapdos_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0145_zapdos/zapdos.geo.json"
+      ]
+    },
+    {
+      "dex": 146,
+      "id": "moltres",
+      "folder": "0146_moltres",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0146_moltres/moltres.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0146_moltres/moltres.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0146_moltres/moltres.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0146_moltres/moltres_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0146_moltres/moltres.geo.json"
+      ]
+    },
+    {
+      "dex": 147,
+      "id": "dratini",
+      "folder": "0147_dratini",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0147_dratini/dratini.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0147_dratini/dratini.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0147_dratini/dratini.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0147_dratini/dratini_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0147_dratini/dratini.geo.json"
+      ]
+    },
+    {
+      "dex": 148,
+      "id": "dragonair",
+      "folder": "0148_dragonair",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0148_dragonair/dragonair.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0148_dragonair/dragonair.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0148_dragonair/dragonair.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0148_dragonair/dragonair_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0148_dragonair/dragonair.geo.json"
+      ]
+    },
+    {
+      "dex": 149,
+      "id": "dragonite",
+      "folder": "0149_dragonite",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0149_dragonite/dragonite.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0149_dragonite/dragonite.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0149_dragonite/dragonite.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0149_dragonite/dragonite_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0149_dragonite/dragonite.geo.json"
+      ]
+    },
+    {
+      "dex": 150,
+      "id": "mewtwo",
+      "folder": "0150_mewtwo",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0150_mewtwo/mewtwo.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0150_mewtwo/mewtwo.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0150_mewtwo/mewtwo.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0150_mewtwo/mewtwo_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0150_mewtwo/mewtwo.geo.json"
+      ]
+    },
+    {
+      "dex": 151,
+      "id": "mew",
+      "folder": "0151_mew",
+      "model": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0151_mew/mew.geo.json",
+      "animations": "common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0151_mew/mew.animation.json",
+      "texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0151_mew/mew.png",
+      "shiny_texture": "common/src/main/resources/assets/cobblemon/textures/pokemon/0151_mew/mew_shiny.png",
+      "model_variants": [
+        "common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0151_mew/mew.geo.json"
+      ]
+    }
+  ]
+}
