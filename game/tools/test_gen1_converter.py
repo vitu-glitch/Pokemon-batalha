@@ -12,6 +12,7 @@ manifest = json.loads((ROOT / "pokemon" / "gen1_manifest.json").read_text(encodi
 source_ref = manifest.get("source_branch", "main")
 base = f"https://gitlab.com/cable-mc/cobblemon/-/raw/{source_ref}/"
 items = {item["id"]: item for item in manifest["pokemon"]}
+SAMPLES = ["bulbasaur", "pikachu", "pidgey", "gengar", "charizard", "raichu", "arbok"]
 
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -25,6 +26,24 @@ def list_gitlab_directory(path: str) -> list[dict]:
     with urlopen(request, timeout=30) as response:
         return json.loads(response.read().decode("utf-8"))
 
+
+
+# Official Bedrock vector rules: scalars and one-component arrays apply to all axes.
+for channel_value in [2.0, "2.0", [2.0], ["2.0"]]:
+    converted = converter.vector_value(channel_value, 0.0, {}, [0.0, 0.0, 0.0])
+    assert converted == [2.0, 2.0, 2.0], (channel_value, converted)
+
+# Unspecified axes in a two-component scale track retain their scale default.
+assert converter.vector_value([2.0, 3.0], 0.0, {}, [1.0, 1.0, 1.0]) == [2.0, 3.0, 1.0]
+
+# Pre/post keyframes must interpolate towards the incoming pre value, not the post jump.
+step_channel = {
+    "0.0": [0.0, 0.0, 0.0],
+    "1.0": {"pre": [0.0, 0.0, 0.0], "post": [10.0, 10.0, 10.0]},
+    "2.0": [10.0, 10.0, 10.0],
+}
+assert converter.sample_channel(step_channel, 0.5, {}, [0.0, 0.0, 0.0]) == [0.0, 0.0, 0.0]
+assert converter.sample_channel(step_channel, 1.5, {}, [0.0, 0.0, 0.0]) == [10.0, 10.0, 10.0]
 
 def has_motion(clip: dict) -> bool:
     for channels in clip.get("bones", {}).values():

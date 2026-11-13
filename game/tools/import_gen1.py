@@ -30,7 +30,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 5
+CONVERTER_VERSION = 6
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 
 # Corner order produces outward normals; triangle indices are reversed below
@@ -515,21 +515,36 @@ def molang(expression, seconds, query):
     return 0.0
 
 
-def vector_value(value, seconds, query, default):
+def vector_value(value, seconds, query, default, key_part="post"):
     if isinstance(value, dict):
-        for key in ("post", "vector", "pre"):
-            if key in value:
-                return vector_value(value[key], seconds, query, default)
+        # Bedrock keyframes can have separate incoming ("pre") and outgoing
+        # ("post") values. Keep the requested side when sampling a keyframe.
+        if key_part in value:
+            return vector_value(value[key_part], seconds, query, default, key_part)
+        if "vector" in value:
+            return vector_value(value["vector"], seconds, query, default, key_part)
+        if "post" in value:
+            return vector_value(value["post"], seconds, query, default, key_part)
+        if "pre" in value:
+            return vector_value(value["pre"], seconds, query, default, key_part)
         return list(default)
-    if isinstance(value, (int,float,str)):
+    if isinstance(value, (int, float, str)):
         v = molang(value, seconds, query) if isinstance(value, str) else float(value)
-        return [v, 0.0, 0.0]
-    if isinstance(value, (list,tuple)):
+        # Bedrock scalar channels apply the value to X, Y and Z equally.
+        return [v, v, v]
+    if isinstance(value, (list, tuple)):
+        raw = list(value[:3])
+        if len(raw) == 1:
+            v = molang(raw[0], seconds, query) if isinstance(raw[0], str) else float(raw[0])
+            return [v, v, v]
         result = []
-        for component in list(value[:3]):
-            result.append(molang(component, seconds, query) if isinstance(component,str) else float(component))
+        for index, component in enumerate(raw):
+            result.append(
+                molang(component, seconds, query)
+                if isinstance(component, str) else float(component)
+            )
         while len(result) < 3:
-            result.append(0.0)
+            result.append(float(default[len(result)]))
         return result
     return list(default)
 
@@ -545,17 +560,19 @@ def sample_channel(channel, seconds, query, default):
         keys.sort(key=lambda item:item[0])
         if keys:
             if seconds <= keys[0][0]:
-                return vector_value(channel[keys[0][1]], seconds, query, default)
+                return vector_value(channel[keys[0][1]], seconds, query, default, "post")
             if seconds >= keys[-1][0]:
-                return vector_value(channel[keys[-1][1]], seconds, query, default)
+                return vector_value(channel[keys[-1][1]], seconds, query, default, "post")
             for (ta,ka),(tb,kb) in zip(keys,keys[1:]):
                 if ta <= seconds <= tb:
-                    va = vector_value(channel[ka], ta, query, default)
-                    vb = vector_value(channel[kb], tb, query, default)
+                    # Bedrock interpolates away from the previous key's post value
+                    # toward the next key's pre value. These can differ at a jump.
+                    va = vector_value(channel[ka], ta, query, default, "post")
+                    vb = vector_value(channel[kb], tb, query, default, "pre")
                     alpha = (seconds-ta) / max(tb-ta, 1e-8)
                     return [va[i] + (vb[i]-va[i])*alpha for i in range(3)]
-        return vector_value(channel, seconds, query, default)
-    return vector_value(channel, seconds, query, default)
+        return vector_value(channel, seconds, query, default, "post")
+    return vector_value(channel, seconds, query, default, "post")
 
 
 def convert_animations(animation_json):
