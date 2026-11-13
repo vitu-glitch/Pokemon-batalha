@@ -985,19 +985,20 @@ func _generate_portraits(page: int) -> void:
 		vp.transparent_bg = true
 		vp.size = Vector2i(128, 128)
 		vp.msaa_3d = Viewport.MSAA_DISABLED
-		# Only the visible page is rendered: importing 151 Pokémon must not stall the menu.
-		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		# Render a single thumbnail frame, then stop this viewport. Re-rendering
+		# every portrait every frame caused severe stalls on low-end PCs.
+		vp.render_target_update_mode = SubViewport.UPDATE_ONCE
 		add_child(vp)
 		var data := _setup_portrait(vp, sp, 0.5)
-		for i in 18:
-			await get_tree().process_frame
 		_frame_portrait(data)
-		await RenderingServer.frame_post_draw
+		await get_tree().process_frame
 		await RenderingServer.frame_post_draw
 		if DisplayServer.get_name() != "headless":
 			var img := vp.get_texture().get_image()
 			portraits[sp] = ImageTexture.create_from_image(img)
+		vp.render_target_update_mode = SubViewport.UPDATE_DISABLED
 		vp.queue_free()
+		await get_tree().process_frame
 	_generating = false
 
 

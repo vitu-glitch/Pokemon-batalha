@@ -18,7 +18,7 @@ const SHADER := preload("res://shaders/pokemon.gdshader")
 
 static var _cache := {}
 static var _cache_order: Array[String] = []
-const CACHE_LIMIT := 16
+const CACHE_LIMIT := 4
 
 var species_id := ""
 var skel: Skeleton3D

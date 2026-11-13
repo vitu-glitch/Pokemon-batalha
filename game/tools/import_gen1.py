@@ -26,10 +26,18 @@ ROOT = Path(__file__).resolve().parents[1]
 POKEMON_DIR = ROOT / "pokemon"
 MANIFEST_PATH = POKEMON_DIR / "gen1_manifest.json"
 SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
-FPS = 30
+FPS = 15
+CONVERTER_VERSION = 2
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 
-# Each face is counter-clockwise as seen from outside the cube.
+# Corner order produces outward normals; triangle indices are reversed below
+# because Godot's ArrayMesh uses clockwise winding for front faces.
+FACE_NORMAL_AXIS = {
+    "north": 2, "south": 2, "east": 0,
+    "west": 0, "up": 1, "down": 1,
+}
+GODOT_TRIANGLE_ORDER = (0, 2, 1, 0, 3, 2)
+
 FACES = {
     "north": (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z0),(x0,y1,z0),(x1,y1,z0),(x1,y0,z0)],
               lambda u,v,w,h: [(u,v+h),(u,v),(u+w,v),(u+w,v+h)], "xy"),
@@ -209,25 +217,36 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
         verts, normals, uvs = [], [], []
         for cube in bone.get("cubes", []) or []:
             origin = [float(v) for v in cube.get("origin", [0,0,0])]
-            size = [float(v) for v in cube.get("size", [0,0,0])]
-            inflate = float(cube.get("inflate", 0.0))
+            source_size = [max(0.0, float(v)) for v in cube.get("size", [0,0,0])]
+            inflate = max(0.0, float(cube.get("inflate", 0.0)))
             lo = [origin[i] - inflate for i in range(3)]
-            hi = [origin[i] + size[i] + inflate for i in range(3)]
-            # Flat leaf, wing and vine planes need a tiny thickness for a valid 3D surface.
-            for axis in range(3):
-                if abs(hi[axis] - lo[axis]) < 0.01:
+            hi = [origin[i] + source_size[i] + inflate for i in range(3)]
+
+            # Bedrock uses zero-size axes for flat leaves, ears, fins and facial details.
+            # Give those planes a little physical thickness, but render only their two
+            # broad faces. The four artificial edge faces have no valid texture area.
+            flat_axes = [axis for axis, extent in enumerate(source_size) if extent <= 1e-5]
+            if len(flat_axes) >= 2:
+                continue
+            for axis in flat_axes:
+                if hi[axis] - lo[axis] < 0.02:
                     center = (hi[axis] + lo[axis]) * 0.5
                     lo[axis], hi[axis] = center - 0.01, center + 0.01
+
             x0,y0,z0 = lo
             x1,y1,z1 = hi
             dims = (x1-x0, y1-y0, z1-z0)
+            # Inflate changes the mesh bounds, never the texture's UV layout.
+            uv_dims = tuple(source_size)
             cube_pivot = tuple(float(v) for v in cube.get("pivot", pivot))
             cube_rotation = tuple(float(v) for v in cube.get("rotation", [0,0,0]))
             inv_bone = transpose(world_basis)
 
             for face, (make_corners, _, _) in FACES.items():
+                if flat_axes and FACE_NORMAL_AXIS[face] != flat_axes[0]:
+                    continue
                 corners = make_corners(x0,y0,z0,x1,y1,z1)
-                uv_points = face_uvs(cube, face, dims, tex_w, tex_h)
+                uv_points = face_uvs(cube, face, uv_dims, tex_w, tex_h)
                 if uv_points is None:
                     continue
                 world_points = [rotate_about(p, cube_pivot, cube_rotation) for p in corners]
@@ -240,7 +259,9 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
                     continue
                 n_world = tuple(v / n_len for v in n)
                 n_local = mat_vec(inv_bone, n_world)
-                for index in (0,1,2,0,2,3):
+                # UVs and normals stay attached to their original corners. Only the
+                # triangle order changes so Godot sees the outside as the front face.
+                for index in GODOT_TRIANGLE_ORDER:
                     p = local_points[index]
                     verts.extend(round(float(v), 5) for v in p)
                     normals.extend(round(float(v), 5) for v in n_local)
@@ -262,6 +283,7 @@ def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
         })
 
     return {
+        "converter_version": CONVERTER_VERSION,
         "fps": FPS,
         "tex_w": tex_w,
         "tex_h": tex_h,
@@ -430,6 +452,10 @@ def convert_animations(animation_json):
                     t = min(length, frame/FPS)
                     vector = sample_channel(channels[source_key], t, query, default)
                     values.extend(round(float(v),5) for v in vector)
+                # One key is enough for a constant bone channel. Keeping 15 identical
+                # keys per second wastes memory and makes each fight heavier to animate.
+                if len(values) > 3 and all(values[i:i+3] == values[:3] for i in range(3, len(values), 3)):
+                    values = values[:3]
                 converted[output_key] = values
             if converted:
                 bones_out[bone_name] = converted
@@ -515,7 +541,21 @@ def process_one(item, raw_base):
     normal_path = target_dir / "texture.png"
     shiny_path = target_dir / "texture_shiny.png"
 
-    if not model_path.exists() or model_path.stat().st_size == 0:
+    # Preserve the project's original hand-tuned models. Rebuild all imported models
+    # once when the converter format changes, then leave the up-to-date files alone.
+    preserve_existing = species_id in {
+        "bulbasaur", "pikachu", "snorlax", "charizard", "blastoise",
+        "venusaur", "lucario", "gengar", "garchomp", "greninja", "scizor",
+    }
+    needs_conversion = not model_path.exists() or model_path.stat().st_size == 0
+    if model_path.exists() and not preserve_existing:
+        try:
+            with gzip.open(model_path, "rt", encoding="utf-8") as stream:
+                existing_model = json.load(stream)
+            needs_conversion = int(existing_model.get("converter_version", 0)) < CONVERTER_VERSION
+        except (OSError, EOFError, json.JSONDecodeError, AttributeError, TypeError, ValueError):
+            needs_conversion = True
+    if needs_conversion:
         geometry_bytes = fetch_bytes(raw_base + item["model"])
         animation_bytes = fetch_bytes(raw_base + item["animations"])
         geometry = json.loads(geometry_bytes.decode("utf-8"))
