@@ -30,7 +30,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 8
+CONVERTER_VERSION = 9
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 METADATA_SOURCE_COMMIT = "75bb1a6c2fe92ef54951fb68d16d21f290a9ee88"
 METADATA_RAW_BASE = (
@@ -653,7 +653,7 @@ def convert_animations(animation_json):
     # borrow an arbitrary looping animation: "sleep", "faint" or a special pose
     # would otherwise become the Pokémon's permanent standing pose.
     fallback_idle = None
-    for preferred in ("battle_idle", "ground_idle", "air_idle", "hover_idle", "water_idle"):
+    for preferred in ("ground_idle", "air_idle", "hover_idle", "water_idle", "battle_idle"):
         candidate = output.get(preferred)
         if candidate is not None and candidate["loop"]:
             fallback_idle = candidate

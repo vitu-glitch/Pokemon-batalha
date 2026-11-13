@@ -83,6 +83,10 @@ def has_motion(clip: dict) -> bool:
     return False
 
 
+# The in-game neutral pose must prefer ground_idle over battle_idle guard poses.
+fighter_source = (ROOT / "scripts" / "fighter.gd").read_text(encoding="utf-8")
+assert 'var a := "ground_idle" if model.has_anim("ground_idle") else "battle_idle"' in fighter_source
+
 for species_id in SAMPLES:
     item = items[species_id]
     model_path, geometry_bytes = converter.resolve_source_asset(item, base, "model", source_ref)

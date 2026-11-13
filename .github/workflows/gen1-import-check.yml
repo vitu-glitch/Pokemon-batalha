@@ -8,6 +8,7 @@ on:
       - "game/tools/import_gen1.py"
       - "game/tools/test_gen1_converter.py"
       - "game/tools/test_gen1_all_assets.py"
+      - "game/scripts/fighter.gd"
       - "game/pokemon/gen1_manifest.json"
       - ".github/workflows/gen1-import-check.yml"
   workflow_dispatch:
