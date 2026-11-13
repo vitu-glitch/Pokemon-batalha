@@ -32,17 +32,17 @@ USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 # Each face is counter-clockwise as seen from outside the cube.
 FACES = {
     "north": (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z0),(x0,y1,z0),(x1,y1,z0),(x1,y0,z0)],
-              lambda u,v,w,h: [(u,v+h),(u,v),(u+w,v),(u+w,v+h)], "xz"),
+              lambda u,v,w,h: [(u,v+h),(u,v),(u+w,v),(u+w,v+h)], "xy"),
     "south": (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z1),(x1,y0,z1),(x1,y1,z1),(x0,y1,z1)],
-              lambda u,v,w,h: [(u+w,v+h),(u,v+h),(u,v),(u+w,v)], "xz"),
+              lambda u,v,w,h: [(u+w,v+h),(u,v+h),(u,v),(u+w,v)], "xy"),
     "east":  (lambda x0,y0,z0,x1,y1,z1: [(x1,y0,z1),(x1,y0,z0),(x1,y1,z0),(x1,y1,z1)],
               lambda u,v,w,h: [(u+w,v+h),(u,v+h),(u,v),(u+w,v)], "yz"),
     "west":  (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z0),(x0,y0,z1),(x0,y1,z1),(x0,y1,z0)],
               lambda u,v,w,h: [(u,v+h),(u+w,v+h),(u+w,v),(u,v)], "yz"),
     "up":    (lambda x0,y0,z0,x1,y1,z1: [(x0,y1,z1),(x1,y1,z1),(x1,y1,z0),(x0,y1,z0)],
-              lambda u,v,w,h: [(u,v+h),(u+w,v+h),(u+w,v),(u,v)], "xy"),
+              lambda u,v,w,h: [(u,v+h),(u+w,v+h),(u+w,v),(u,v)], "xz"),
     "down":  (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z0),(x1,y0,z0),(x1,y0,z1),(x0,y0,z1)],
-              lambda u,v,w,h: [(u,v),(u+w,v),(u+w,v+h),(u,v+h)], "xy"),
+              lambda u,v,w,h: [(u,v),(u+w,v),(u+w,v+h),(u,v+h)], "xz"),
 }
 
 

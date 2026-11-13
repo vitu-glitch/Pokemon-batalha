@@ -17,6 +17,8 @@ const REACTIONS := ["recoil", "air_recoil", "hurt", "cry", "battle_cry"]
 const SHADER := preload("res://shaders/pokemon.gdshader")
 
 static var _cache := {}
+static var _cache_order: Array[String] = []
+const CACHE_LIMIT := 16
 
 var species_id := ""
 var skel: Skeleton3D
@@ -94,6 +96,8 @@ func setup(species: String, shiny := false) -> void:
 
 static func _load(species: String) -> Dictionary:
 	if _cache.has(species):
+		_cache_order.erase(species)
+		_cache_order.append(species)
 		return _cache[species]
 	var dir := "res://pokemon/%s/" % species
 	var raw := FileAccess.get_file_as_bytes(dir + "model.json.gz").decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP)
@@ -290,6 +294,12 @@ static func _load(species: String) -> Dictionary:
 	var res := {"dir": dir, "bones": bones, "mesh": mesh, "skin": skin, "library": lib,
 		"blink": blink, "fps": fps, "mat": m, "anims": data.anims.keys(), "layer_library": layer_lib}
 	_cache[species] = res
+	_cache_order.erase(species)
+	_cache_order.append(species)
+	# Keep only a small working set in memory. Active models retain their own references.
+	while _cache_order.size() > CACHE_LIMIT:
+		var oldest: String = _cache_order.pop_front()
+		_cache.erase(oldest)
 	return res
 
 
