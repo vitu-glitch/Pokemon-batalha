@@ -226,7 +226,10 @@ func burst(key: String, pos: Vector3, dir := Vector3.UP, color := Color(0, 0, 0,
 			free = e
 			break
 	if free == null:
-		if _pools[key].size() >= 8:
+		var pool_limit := 8
+		if main != null and main.options != null and main.options.graphics_quality == "performance":
+			pool_limit = 4
+		if _pools[key].size() >= pool_limit:
 			free = _pools[key][0]
 			_pools[key].push_back(_pools[key].pop_front())
 		else:
