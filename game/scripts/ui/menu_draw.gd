@@ -286,7 +286,11 @@ func _selection() -> void:
 	u.text_fit(1676.0, 70.0, tr(Menu.STAGE_NAME[st]), 170.0, 30.0, UiKit.INK, u.heavy)
 	var setup := on("setup_view", m.sel_phase == "setup")
 	if setup < 0.999:
-		_wall(list, setup)
+		var page_start := int(m.cursor / Menu.PAGE_SIZE) * Menu.PAGE_SIZE
+		var visible: Array = []
+		for i in range(page_start, mini(page_start + Menu.PAGE_SIZE, list.size())):
+			visible.append(list[i])
+		_wall(visible, setup, page_start)
 	if setup > 0.001:
 		_setup_bar(setup)
 	for side in 2:
@@ -312,18 +316,20 @@ func _selection() -> void:
 
 ## The wall of portraits: one row of ten, no gaps. The highlighted one lights up in the
 ## color of whoever is picking; tokens mark what each side has.
-func _wall(list: Array, setup: float) -> void:
-	var tw := 1780.0 / list.size()
+func _wall(list: Array, setup: float, start := 0) -> void:
+	var tw := 1780.0 / maxf(float(list.size()), 1.0)
 	var lift := -340.0 * UiKit.ease(setup)
 	var picker := _side_color(1 if m.sel_phase == "p2" else 0)
+	var end_index := start + list.size()
+	u.text(70.0, 124.0, "KANTO  %d-%d / %d" % [start + 1, end_index, m.pokemon_list().size()], 18.0, UiKit.SOFT, u.bold)
 	for i in list.size():
 		var sp: String = list[i]
 		var data: Dictionary = Roster.POKEMON[sp]
 		var x := 70.0 + i * tw
 		var y := 150.0 + lift
-		var o := on("wall" + sp, i == m.cursor and m.sel_phase != "setup")
+		var o := on("wall" + sp, start + i == m.cursor and m.sel_phase != "setup")
 		if setup < 0.5:
-			zone("wall", i, x, y, tw - 3.0, 200.0)
+			zone("wall", start + i, x, y, tw - 3.0, 200.0)
 		u.rect(x, y, tw - 3.0, 200.0, UiKit.PANEL.lerp(UiKit.PANEL_HI, o))
 		u.rect(x, y, tw - 3.0, 124.0, Color(Roster.TYPE_COLOR.get(data.types[0], UiKit.GREY), 0.22 + 0.2 * o))
 		if m.portraits.has(sp):
@@ -476,14 +482,19 @@ func _moves() -> void:
 	var list := m.pokemon_list()
 	var sp := m.edit_sp
 	var picking := m.edit_phase == "pokemon"
-	# Left: the Pokémon, a column of strips.
-	for i in list.size():
-		var s: String = list[i]
+	var focus_index := m.cursor if picking else maxi(list.find(sp), 0)
+	var page_start := int(focus_index / Menu.PAGE_SIZE) * Menu.PAGE_SIZE
+	var page_end := mini(page_start + Menu.PAGE_SIZE, list.size())
+	u.text(60.0, 124.0, "POKÉMON  %d-%d / %d" % [page_start + 1, page_end, list.size()], 18.0, UiKit.SOFT, u.bold)
+	# Keep the list to one readable page instead of drawing 151 strips outside the screen.
+	for index in range(page_start, page_end):
+		var s: String = list[index]
+		var row := index - page_start
 		var o := on("mv" + s, s == sp)
-		var y := 150.0 + i * 84.0
+		var y := 150.0 + row * 84.0
 		var lit := o if picking else o * 0.45
 		u.slant(60.0 + 18.0 * o, y, 330.0, 74.0, UiKit.PANEL.lerp(UiKit.BLUE, lit))
-		zone("mvp", i, 60.0, y, 330.0 + 74.0 * UiKit.SLANT, 74.0)
+		zone("mvp", index, 60.0, y, 330.0 + 74.0 * UiKit.SLANT, 74.0)
 		if m.portraits.has(s):
 			u.tex(m.portraits[s], 70.0 + 18.0 * o, y - 2.0, 76.0, 76.0)
 		u.title(156.0 + 18.0 * o, y + 20.0, tr(Roster.POKEMON[s].display_name).to_upper(), 32.0, UiKit.INK, -1, 210.0)

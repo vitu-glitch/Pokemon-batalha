@@ -26,6 +26,7 @@ const STAGE_TEXT := {"night": "A Galar stadium at night, packed and walled all r
 	"floating": "A platform over the void. Whoever is pushed off the edge is out.",
 	"league": "The League's coliseum. The field closes in bit by bit: outside it you lose HP."}
 const COLUMNS := 5
+const PAGE_SIZE := 10
 const MAIN_MENU := [["combat", "Battle", "Against the AI. Pick your Pokémon, the rival and the difficulty."],
 	["online", "Online", "1 vs 1 with a friend over the internet."],
 	["training", "Training", "Still or active rival, no rush. R resets, T stops or frees the rival."],
@@ -76,6 +77,7 @@ var _vs_t := -1.0
 var _vs := []                    # [mine, theirs] on the VS screen
 var _renders := {}               # slot -> {vp, model, species}: live 3D renders on the menus
 var _generating := false
+var _portrait_page := -1
 # Moves screen: pokemon (list), slots (its 4 + ability), list (options for the slot)
 var edit_phase := "pokemon"
 var edit_sp := ""
@@ -113,6 +115,12 @@ func pokemon_list() -> Array:
 				ready = false
 		if ready:
 			list.append(sp)
+	# Keep the original 151 in National Pokédex order, followed by later-generation guests.
+	list.sort_custom(func(a: String, b: String) -> bool:
+		var da: int = int(Species.DATA.get(a, {}).get("dex", 9999))
+		var db: int = int(Species.DATA.get(b, {}).get("dex", 9999))
+		return a < b if da == db else da < db
+	)
 	return list
 
 
@@ -131,8 +139,7 @@ func open_menu(en := "") -> void:
 	if en == "":
 		en = "main" if screen != "title" else "title"
 	_go(en)
-	if portraits.is_empty() and not _generating:
-		_generate_portraits()
+	_ensure_page_portraits()
 
 
 func close() -> void:
@@ -476,6 +483,7 @@ func setup_items() -> Array:
 func _selection() -> void:
 	var list := pokemon_list()
 	var n := list.size()
+	_ensure_page_portraits()
 	var host: bool = online and main.net != null and main.net.host
 	# Online, the host can also change the stage from the grid (RB / E).
 	if host and sel_phase != "setup" and _pressed("mov2"):
@@ -489,9 +497,9 @@ func _selection() -> void:
 	elif _pressed("move_left"):
 		to = maxi(cursor - 1, 0)
 	elif _pressed("move_down"):
-		to = mini(cursor + COLUMNS, n - 1)
+		to = mini(cursor + PAGE_SIZE, n - 1)
 	elif _pressed("move_up"):
-		to = maxi(cursor - COLUMNS, 0)
+		to = maxi(cursor - PAGE_SIZE, 0)
 	if to != cursor:
 		_pick_on_wall(to)
 	if _accept():
@@ -720,6 +728,7 @@ const EDIT_ROWS := 8             # options shown at once in the list
 func _edit_moves() -> void:
 	var list := pokemon_list()
 	var n := list.size()
+	_ensure_page_portraits()
 	if _pressed("menu_info") and edit_phase != "pokemon":
 		details = not details
 		_sound("move")
@@ -945,20 +954,41 @@ func _free_renders() -> void:
 # ---------------------------------------------------------------- portraits
 
 ## Grid icons: each Pokémon rendered once to a texture.
-func _generate_portraits() -> void:
+func _ensure_page_portraits() -> void:
+	if _generating:
+		return
+	var list := pokemon_list()
+	if list.is_empty():
+		return
+	var page := int(cursor / PAGE_SIZE)
+	if page != _portrait_page:
+		_generate_portraits(page)
+
+
+func _generate_portraits(page: int) -> void:
+	if _generating:
+		return
+	var list := pokemon_list()
+	if list.is_empty():
+		return
+	var start := page * PAGE_SIZE
+	if start >= list.size():
+		return
 	_generating = true
-	for sp in pokemon_list():
+	_portrait_page = page
+	for index in range(start, mini(start + PAGE_SIZE, list.size())):
+		var sp: String = list[index]
+		if portraits.has(sp):
+			continue
 		var vp := SubViewport.new()
 		vp.own_world_3d = true
 		vp.transparent_bg = true
 		vp.size = Vector2i(128, 128)
 		vp.msaa_3d = Viewport.MSAA_DISABLED
-		# Render while capturing this one-time portrait; the viewport is freed after capture.
+		# Only the visible page is rendered: importing 151 Pokémon must not stall the menu.
 		vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 		add_child(vp)
 		var data := _setup_portrait(vp, sp, 0.5)
-		# Wait for the animation to place the skeleton: before that, the locators are in
-		# the rest pose and the framing ends up on the belly.
 		for i in 18:
 			await get_tree().process_frame
 		_frame_portrait(data)
@@ -1123,6 +1153,7 @@ func _hover(z: Dictionary) -> void:
 			if screen == "moves" and edit_phase == "pokemon" and z.i != cursor:
 				cursor = z.i
 				edit_sp = pokemon_list()[cursor]
+				_ensure_page_portraits()
 				main.audio.cry(edit_sp, main.camera.global_position, 1.0, -22.0)
 		"slot":
 			if edit_phase == "slots":
