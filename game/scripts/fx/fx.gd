@@ -15,12 +15,12 @@ extends Node3D
 
 const DIR := "res://fx/particles/"
 const SEQUENCES := "res://fx/sequences/"
-const MAX_EMITTERS := 120
-## Budget of live particles (each one evaluates its Molang in GDScript: about 25 µs).
-## Past the cap, new effects spawn with fewer particles. Low-priority ones ("low") give
-## way before the player's.
-const BUDGET := 320
-const BUDGET_LOW := 160
+## Conservative battle-effect limits for lower-end CPUs. Every particle is updated
+## in GDScript each frame, so keeping this bounded prevents large move combos from
+## overwhelming the main thread. Low-priority effects yield first.
+const MAX_EMITTERS := 64
+const BUDGET := 120
+const BUDGET_LOW := 60
 
 static var _defs := {}
 static var _sequences := {}
