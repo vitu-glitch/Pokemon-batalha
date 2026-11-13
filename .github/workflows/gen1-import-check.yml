@@ -1,0 +1,26 @@
+name: Gen 1 converter checks
+
+on:
+  push:
+    branches:
+      - feature/bulbasaur-import
+    paths:
+      - "game/tools/import_gen1.py"
+      - "game/tools/test_gen1_converter.py"
+      - "game/pokemon/gen1_manifest.json"
+      - ".github/workflows/gen1-import-check.yml"
+  workflow_dispatch:
+
+jobs:
+  converter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check Python syntax
+        run: python -m py_compile game/tools/import_gen1.py game/tools/test_gen1_converter.py
+        working-directory: .
+      - name: Test converted source models
+        run: python game/tools/test_gen1_converter.py
