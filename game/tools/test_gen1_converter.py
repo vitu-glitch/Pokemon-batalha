@@ -28,6 +28,17 @@ def list_gitlab_directory(path: str) -> list[dict]:
 
 
 
+
+# Missing animation_length defaults to the last explicit keyframe time.
+assert converter.infer_animation_length({
+    "bones": {"tail": {"rotation": {
+        "0.0": [0, 0, 0], "0.4": [10, 0, 0], "1.35": [0, 0, 0]
+    }}}
+}, True) == 1.35
+assert converter.infer_animation_length({
+    "bones": {"tail": {"rotation": [0, 0, 0]}}
+}, True) == converter.ANIM_DEFAULT_LOOP_LENGTH
+
 # Official Bedrock vector rules: scalars and one-component arrays apply to all axes.
 for channel_value in [2.0, "2.0", [2.0], ["2.0"]]:
     converted = converter.vector_value(channel_value, 0.0, {}, [0.0, 0.0, 0.0])

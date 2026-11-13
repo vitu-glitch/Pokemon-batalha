@@ -30,7 +30,7 @@ SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
 FPS = 20
 ANIM_DEFAULT_LOOP_LENGTH = 4.0
 MAX_ANIMATION_FRAMES = 480
-CONVERTER_VERSION = 10
+CONVERTER_VERSION = 11
 USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
 METADATA_SOURCE_COMMIT = "75bb1a6c2fe92ef54951fb68d16d21f290a9ee88"
 METADATA_RAW_BASE = (
@@ -595,6 +595,32 @@ def sample_channel(channel, seconds, query, default):
     return vector_value(channel, seconds, query, default, "post")
 
 
+
+def infer_animation_length(animation, loop):
+    declared = animation.get("animation_length")
+    if declared is not None:
+        return max(float(declared), 1.0 / FPS)
+
+    latest_key = 0.0
+    for channels in (animation.get("bones", {}) or {}).values():
+        if not isinstance(channels, dict):
+            continue
+        for channel in channels.values():
+            if not isinstance(channel, dict):
+                continue
+            for key in channel:
+                try:
+                    latest_key = max(latest_key, float(key))
+                except (TypeError, ValueError):
+                    continue
+    if latest_key > 0.0:
+        return max(latest_key, 1.0 / FPS)
+
+    # Expression-only looped clips have no timestamp to infer from. Keep enough
+    # time for their Molang anim_time cycles; non-looping static clips can be short.
+    default_length = ANIM_DEFAULT_LOOP_LENGTH if loop else 1.0
+    return max(default_length, 1.0 / FPS)
+
 def convert_animations(animation_json):
     source = animation_json.get("animations", {})
     output = {}
@@ -607,11 +633,9 @@ def convert_animations(animation_json):
             continue
         loop_raw = animation.get("loop", False)
         loop = loop_raw is True or str(loop_raw).lower() == "true"
-        declared_length = animation.get("animation_length")
-        # Bedrock omits animation_length on many cyclic Molang animations. A
-        # one-second guess truncates slow idle cycles and makes them snap back.
-        default_length = ANIM_DEFAULT_LOOP_LENGTH if loop else 1.0
-        length = max(float(declared_length if declared_length is not None else default_length) or default_length, 1.0/FPS)
+        # The format defaults to the last explicit keyframe time. Only
+        # expression-only loops (with no timed keys) need a fallback duration.
+        length = infer_animation_length(animation, loop)
         frames = max(2, min(MAX_ANIMATION_FRAMES, int(math.ceil(length*FPS))+1))
         query = {
             "ground_speed": 1 if ("walk" in name or "run" in name) else 0,
