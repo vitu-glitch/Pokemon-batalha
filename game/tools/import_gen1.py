@@ -1,0 +1,595 @@
+#!/usr/bin/env python3
+"""Import and convert all 151 Kanto Pokemon for PokeBrawl.
+
+Run from the repository root with:
+    py game/tools/import_gen1.py
+
+The importer uses Python's standard library only. It downloads a pinned Cobblemon
+asset revision, converts Bedrock geometry and animations to PokeBrawl's runtime
+format, and writes the species data consumed by the Godot project.
+"""
+from __future__ import annotations
+
+import ast
+import concurrent.futures
+import gzip
+import json
+import math
+import re
+import sys
+import time
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+POKEMON_DIR = ROOT / "pokemon"
+MANIFEST_PATH = POKEMON_DIR / "gen1_manifest.json"
+SPECIES_OUTPUT = POKEMON_DIR / "gen1_species.json"
+FPS = 30
+USER_AGENT = "PokeBrawl-Gen1-Importer/1.0"
+
+# Each face is counter-clockwise as seen from outside the cube.
+FACES = {
+    "north": (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z0),(x0,y1,z0),(x1,y1,z0),(x1,y0,z0)],
+              lambda u,v,w,h: [(u,v+h),(u,v),(u+w,v),(u+w,v+h)], "xz"),
+    "south": (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z1),(x1,y0,z1),(x1,y1,z1),(x0,y1,z1)],
+              lambda u,v,w,h: [(u+w,v+h),(u,v+h),(u,v),(u+w,v)], "xz"),
+    "east":  (lambda x0,y0,z0,x1,y1,z1: [(x1,y0,z1),(x1,y0,z0),(x1,y1,z0),(x1,y1,z1)],
+              lambda u,v,w,h: [(u+w,v+h),(u,v+h),(u,v),(u+w,v)], "yz"),
+    "west":  (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z0),(x0,y0,z1),(x0,y1,z1),(x0,y1,z0)],
+              lambda u,v,w,h: [(u,v+h),(u+w,v+h),(u+w,v),(u,v)], "yz"),
+    "up":    (lambda x0,y0,z0,x1,y1,z1: [(x0,y1,z1),(x1,y1,z1),(x1,y1,z0),(x0,y1,z0)],
+              lambda u,v,w,h: [(u,v+h),(u+w,v+h),(u+w,v),(u,v)], "xy"),
+    "down":  (lambda x0,y0,z0,x1,y1,z1: [(x0,y0,z0),(x1,y0,z0),(x1,y0,z1),(x0,y0,z1)],
+              lambda u,v,w,h: [(u,v),(u+w,v),(u+w,v+h),(u,v+h)], "xy"),
+}
+
+
+def fetch_bytes(url: str, attempts: int = 5) -> bytes:
+    last = None
+    for attempt in range(attempts):
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+            with urllib.request.urlopen(request, timeout=45) as response:
+                return response.read()
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            last = exc
+            time.sleep(min(2 ** attempt, 10))
+    raise RuntimeError(f"Download failed: {url}\n{last}")
+
+
+def fetch_json(base: str, path: str) -> dict:
+    try:
+        value = json.loads(fetch_bytes(base + path).decode("utf-8"))
+    except Exception as exc:
+        raise RuntimeError(f"Could not read {path}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise RuntimeError(f"Expected a JSON object in {path}")
+    return value
+
+
+def vec_add(a, b):
+    return tuple(a[i] + b[i] for i in range(3))
+
+
+def vec_sub(a, b):
+    return tuple(a[i] - b[i] for i in range(3))
+
+
+def dot_cross(a, b):
+    return (
+        a[1]*b[2] - a[2]*b[1],
+        a[2]*b[0] - a[0]*b[2],
+        a[0]*b[1] - a[1]*b[0],
+    )
+
+
+def mat_mul(a, b):
+    return tuple(tuple(sum(a[r][k] * b[k][c] for k in range(3))
+                       for c in range(3)) for r in range(3))
+
+
+def mat_vec(m, v):
+    return tuple(sum(m[r][c] * v[c] for c in range(3)) for r in range(3))
+
+
+def transpose(m):
+    return tuple(tuple(m[c][r] for c in range(3)) for r in range(3))
+
+
+def euler_basis(degrees):
+    x, y, z = [math.radians(float(v)) for v in degrees]
+    sx, cx = math.sin(x), math.cos(x)
+    sy, cy = math.sin(y), math.cos(y)
+    sz, cz = math.sin(z), math.cos(z)
+    rx = ((1,0,0),(0,cx,-sx),(0,sx,cx))
+    ry = ((cy,0,sy),(0,1,0),(-sy,0,cy))
+    rz = ((cz,-sz,0),(sz,cz,0),(0,0,1))
+    return mat_mul(mat_mul(rz, ry), rx)
+
+
+def rotate_about(point, pivot, rotation):
+    return vec_add(pivot, mat_vec(euler_basis(rotation), vec_sub(point, pivot)))
+
+
+def uv_rects(uv, width, height, depth):
+    u, v = float(uv[0]), float(uv[1])
+    return {
+        "north": (u + depth, v + depth, width, height),
+        "east": (u + depth + width, v + depth, depth, height),
+        "south": (u + depth + width + depth, v + depth, width, height),
+        "west": (u, v + depth, depth, height),
+        "up": (u + depth, v, width, depth),
+        "down": (u + depth + width, v, width, depth),
+    }
+
+
+def face_uvs(cube, face, dims, tex_w, tex_h):
+    uv_data = cube.get("uv", [0, 0])
+    if isinstance(uv_data, dict):
+        info = uv_data.get(face)
+        if not isinstance(info, dict) or "uv" not in info:
+            return None
+        u, v = float(info["uv"][0]), float(info["uv"][1])
+        uv_size = info.get("uv_size")
+        if uv_size is None:
+            axis = FACES[face][2]
+            w, h = (dims[0], dims[2]) if axis == "xz" else (
+                (dims[2], dims[1]) if axis == "yz" else (dims[0], dims[1]))
+        else:
+            w, h = float(uv_size[0]), float(uv_size[1])
+        rotation = int(info.get("uv_rotation", info.get("rotation", 0))) % 360
+    else:
+        rect = uv_rects(uv_data, *dims)[face]
+        u, v, w, h = rect
+        rotation = 0
+
+    points = FACES[face][1](u, v, w, h)
+    if rotation:
+        cu, cv = u + w * 0.5, v + h * 0.5
+        turns = (rotation // 90) % 4
+        rotated = []
+        for px, py in points:
+            dx, dy = px - cu, py - cv
+            for _ in range(turns):
+                dx, dy = -dy, dx
+            rotated.append((cu + dx, cv + dy))
+        points = rotated
+    if cube.get("mirror", False):
+        points = [(2.0 * u + w - px, py) for px, py in points]
+    return [(px / tex_w, py / tex_h) for px, py in points]
+
+
+def convert_geometry(geometry_json: dict, animation_json: dict) -> dict:
+    geometries = geometry_json.get("minecraft:geometry", [])
+    if not geometries:
+        raise RuntimeError("No minecraft:geometry entry")
+    geometry = geometries[0]
+    desc = geometry.get("description", {})
+    tex_w = int(desc.get("texture_width", 64))
+    tex_h = int(desc.get("texture_height", 64))
+    source_bones = geometry.get("bones", [])
+    by_name = {bone["name"]: bone for bone in source_bones}
+
+    ordered, visited = [], set()
+    def visit(bone):
+        name = bone["name"]
+        if name in visited:
+            return
+        parent = bone.get("parent", "")
+        if parent and parent in by_name:
+            visit(by_name[parent])
+        visited.add(name)
+        ordered.append(bone)
+
+    for bone in source_bones:
+        visit(bone)
+
+    global_basis, global_pivot = {}, {}
+    output_bones = []
+    for bone in ordered:
+        name = bone["name"]
+        pivot = tuple(float(v) for v in bone.get("pivot", [0,0,0]))
+        rotation = tuple(float(v) for v in bone.get("rotation", [0,0,0]))
+        parent = bone.get("parent", "")
+        local_basis = euler_basis(rotation)
+        if parent and parent in global_basis:
+            parent_basis = global_basis[parent]
+            local_pos = mat_vec(transpose(parent_basis),
+                                vec_sub(pivot, global_pivot[parent]))
+            world_basis = mat_mul(parent_basis, local_basis)
+        else:
+            parent = ""
+            local_pos = pivot
+            world_basis = local_basis
+        global_basis[name] = world_basis
+        global_pivot[name] = pivot
+
+        verts, normals, uvs = [], [], []
+        for cube in bone.get("cubes", []) or []:
+            origin = [float(v) for v in cube.get("origin", [0,0,0])]
+            size = [float(v) for v in cube.get("size", [0,0,0])]
+            inflate = float(cube.get("inflate", 0.0))
+            lo = [origin[i] - inflate for i in range(3)]
+            hi = [origin[i] + size[i] + inflate for i in range(3)]
+            # Flat leaf, wing and vine planes need a tiny thickness for a valid 3D surface.
+            for axis in range(3):
+                if abs(hi[axis] - lo[axis]) < 0.01:
+                    center = (hi[axis] + lo[axis]) * 0.5
+                    lo[axis], hi[axis] = center - 0.01, center + 0.01
+            x0,y0,z0 = lo
+            x1,y1,z1 = hi
+            dims = (x1-x0, y1-y0, z1-z0)
+            cube_pivot = tuple(float(v) for v in cube.get("pivot", pivot))
+            cube_rotation = tuple(float(v) for v in cube.get("rotation", [0,0,0]))
+            inv_bone = transpose(world_basis)
+
+            for face, (make_corners, _, _) in FACES.items():
+                corners = make_corners(x0,y0,z0,x1,y1,z1)
+                uv_points = face_uvs(cube, face, dims, tex_w, tex_h)
+                if uv_points is None:
+                    continue
+                world_points = [rotate_about(p, cube_pivot, cube_rotation) for p in corners]
+                local_points = [mat_vec(inv_bone, vec_sub(p, pivot)) for p in world_points]
+                edge_a = vec_sub(world_points[1], world_points[0])
+                edge_b = vec_sub(world_points[2], world_points[0])
+                n = dot_cross(edge_a, edge_b)
+                n_len = math.sqrt(sum(v*v for v in n))
+                if n_len < 1e-7:
+                    continue
+                n_world = tuple(v / n_len for v in n)
+                n_local = mat_vec(inv_bone, n_world)
+                for index in (0,1,2,0,2,3):
+                    p = local_points[index]
+                    verts.extend(round(float(v), 5) for v in p)
+                    normals.extend(round(float(v), 5) for v in n_local)
+                    uvs.extend(round(float(v), 6) for v in uv_points[index])
+
+        locators = {}
+        for locator_name, raw_locator in (bone.get("locators", {}) or {}).items():
+            point = raw_locator.get("offset", raw_locator.get("position", [0,0,0])) if isinstance(raw_locator, dict) else raw_locator
+            if isinstance(point, (list, tuple)) and len(point) >= 3:
+                loc = tuple(float(v) for v in point[:3])
+                locators[locator_name] = list(mat_vec(transpose(world_basis), vec_sub(loc, pivot)))
+
+        output_bones.append({
+            "name": name, "parent": parent,
+            "pos": [round(float(v), 5) for v in local_pos],
+            "rot": list(rotation),
+            "verts": verts, "normals": normals, "uvs": uvs,
+            "locators": locators,
+        })
+
+    return {
+        "fps": FPS,
+        "tex_w": tex_w,
+        "tex_h": tex_h,
+        "bones": output_bones,
+        "anims": convert_animations(animation_json),
+    }
+
+
+def molang(expression, seconds, query):
+    text = str(expression).strip()
+    text = text.replace("query.anim_time", "anim_time").replace("q.anim_time", "anim_time")
+    for key, value in query.items():
+        text = re.sub(r"\b(?:query|q)\." + re.escape(key) + r"\b", str(value), text)
+    text = re.sub(r"\b(?:query|q)\.[A-Za-z0-9_]+\b", "0", text)
+    text = text.replace("math.", "")
+    text = re.sub(r"\btrue\b", "True", text, flags=re.IGNORECASE)
+    text = re.sub(r"\bfalse\b", "False", text, flags=re.IGNORECASE)
+    env = {
+        "anim_time": seconds,
+        "sin": lambda x: math.sin(math.radians(float(x))),
+        "cos": lambda x: math.cos(math.radians(float(x))),
+        "tan": lambda x: math.tan(math.radians(float(x))),
+        "clamp": lambda x,a,b: max(float(a), min(float(b), float(x))),
+        "abs": abs, "sqrt": math.sqrt, "pow": pow,
+        "min": min, "max": max, "floor": math.floor, "ceil": math.ceil,
+        "round": round, "pi": math.pi,
+        "lerp": lambda a,b,t: float(a) + (float(b)-float(a))*float(t),
+        "random": lambda *args: sum(float(x) for x in args)/len(args) if args else 0.5,
+        "True": True, "False": False,
+    }
+    try:
+        root = ast.parse(text, mode="eval")
+    except (SyntaxError, ValueError):
+        return 0.0
+
+    def evaluate(node):
+        if isinstance(node, ast.Expression):
+            return evaluate(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int,float,bool)):
+            return node.value
+        if isinstance(node, ast.Name):
+            return env.get(node.id, 0.0)
+        if isinstance(node, ast.BinOp):
+            a,b = evaluate(node.left), evaluate(node.right)
+            if isinstance(node.op, ast.Add): return a+b
+            if isinstance(node.op, ast.Sub): return a-b
+            if isinstance(node.op, ast.Mult): return a*b
+            if isinstance(node.op, ast.Div): return a/b if b else 0.0
+            if isinstance(node.op, ast.Pow): return a**b
+            if isinstance(node.op, ast.Mod): return a%b if b else 0.0
+        if isinstance(node, ast.UnaryOp):
+            value = evaluate(node.operand)
+            if isinstance(node.op, ast.USub): return -value
+            if isinstance(node.op, ast.UAdd): return value
+            if isinstance(node.op, ast.Not): return not value
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+            fn = env.get(node.func.id)
+            if callable(fn):
+                args = [evaluate(arg) for arg in node.args]
+                try: return fn(*args)
+                except (TypeError, ValueError, ZeroDivisionError, OverflowError): return 0.0
+        if isinstance(node, ast.Compare):
+            left = evaluate(node.left)
+            for op, item in zip(node.ops, node.comparators):
+                right = evaluate(item)
+                if isinstance(op, ast.Lt): ok = left < right
+                elif isinstance(op, ast.LtE): ok = left <= right
+                elif isinstance(op, ast.Gt): ok = left > right
+                elif isinstance(op, ast.GtE): ok = left >= right
+                elif isinstance(op, ast.Eq): ok = left == right
+                elif isinstance(op, ast.NotEq): ok = left != right
+                else: return False
+                if not ok: return False
+                left = right
+            return True
+        if isinstance(node, ast.BoolOp):
+            values = [bool(evaluate(item)) for item in node.values]
+            return all(values) if isinstance(node.op, ast.And) else any(values)
+        if isinstance(node, ast.IfExp):
+            return evaluate(node.body if evaluate(node.test) else node.orelse)
+        raise ValueError("Unsupported Molang expression")
+
+    try:
+        value = evaluate(root)
+        if isinstance(value, (int,float,bool)) and math.isfinite(float(value)):
+            return float(value)
+    except (ValueError, TypeError, ZeroDivisionError, OverflowError):
+        pass
+    return 0.0
+
+
+def vector_value(value, seconds, query, default):
+    if isinstance(value, dict):
+        for key in ("post", "vector", "pre"):
+            if key in value:
+                return vector_value(value[key], seconds, query, default)
+        return list(default)
+    if isinstance(value, (int,float,str)):
+        v = molang(value, seconds, query) if isinstance(value, str) else float(value)
+        return [v, 0.0, 0.0]
+    if isinstance(value, (list,tuple)):
+        result = []
+        for component in list(value[:3]):
+            result.append(molang(component, seconds, query) if isinstance(component,str) else float(component))
+        while len(result) < 3:
+            result.append(0.0)
+        return result
+    return list(default)
+
+
+def sample_channel(channel, seconds, query, default):
+    if isinstance(channel, dict):
+        keys = []
+        for key in channel:
+            try:
+                keys.append((float(key), key))
+            except (TypeError, ValueError):
+                pass
+        keys.sort(key=lambda item:item[0])
+        if keys:
+            if seconds <= keys[0][0]:
+                return vector_value(channel[keys[0][1]], seconds, query, default)
+            if seconds >= keys[-1][0]:
+                return vector_value(channel[keys[-1][1]], seconds, query, default)
+            for (ta,ka),(tb,kb) in zip(keys,keys[1:]):
+                if ta <= seconds <= tb:
+                    va = vector_value(channel[ka], ta, query, default)
+                    vb = vector_value(channel[kb], tb, query, default)
+                    alpha = (seconds-ta) / max(tb-ta, 1e-8)
+                    return [va[i] + (vb[i]-va[i])*alpha for i in range(3)]
+        return vector_value(channel, seconds, query, default)
+    return vector_value(channel, seconds, query, default)
+
+
+def convert_animations(animation_json):
+    source = animation_json.get("animations", {})
+    output = {}
+    for full_name, animation in source.items():
+        if not isinstance(animation, dict):
+            continue
+        name = full_name.split(".")[-1]
+        length = max(float(animation.get("animation_length", 1.0) or 1.0), 1.0/FPS)
+        frames = max(2, min(900, int(math.ceil(length*FPS))+1))
+        loop_raw = animation.get("loop", False)
+        loop = loop_raw is True or str(loop_raw).lower() == "true"
+        query = {
+            "ground_speed": 1 if ("walk" in name or "run" in name) else 0,
+            "is_moving": 1 if ("walk" in name or "run" in name) else 0,
+            "is_on_ground": 1,
+            "is_sprinting": 1 if "run" in name else 0,
+        }
+        bones_out = {}
+        for bone_name, channels in (animation.get("bones", {}) or {}).items():
+            if not isinstance(channels, dict):
+                continue
+            converted = {}
+            for source_key, output_key, default in (
+                ("rotation","rot",[0,0,0]),
+                ("position","pos",[0,0,0]),
+                ("scale","scl",[1,1,1]),
+            ):
+                if source_key not in channels:
+                    continue
+                values = []
+                for frame in range(frames):
+                    t = min(length, frame/FPS)
+                    vector = sample_channel(channels[source_key], t, query, default)
+                    values.extend(round(float(v),5) for v in vector)
+                converted[output_key] = values
+            if converted:
+                bones_out[bone_name] = converted
+        if bones_out:
+            output[name] = {
+                "len": length, "loop": loop, "frames": frames,
+                "bones": bones_out,
+            }
+
+    # Names expected by the movement controller. A missing run/fly clip reuses a safe walk pose.
+    fallback_idle = output.get("battle_idle")
+    if fallback_idle is None:
+        fallback_idle = next((v for v in output.values() if v["loop"]), None)
+    if fallback_idle is None:
+        fallback_idle = {"len":1.0,"loop":True,"frames":2,"bones":{}}
+    output.setdefault("ground_idle", json.loads(json.dumps(fallback_idle)))
+    output.setdefault("ground_walk", json.loads(json.dumps(output["ground_idle"])))
+    output.setdefault("ground_run", json.loads(json.dumps(output["ground_walk"])))
+    output.setdefault("fly", json.loads(json.dumps(output["ground_run"])))
+    return output
+
+
+def convert_species(source):
+    stats = source.get("baseStats", {})
+    types = [source.get("primaryType", "normal")]
+    if source.get("secondaryType"):
+        types.append(source["secondaryType"])
+    abilities = []
+    for raw in source.get("abilities", []):
+        hidden = str(raw).startswith("h:")
+        ability_id = str(raw).removeprefix("h:").lower()
+        if ability_id:
+            abilities.append({"id":ability_id,"hidden":hidden})
+    learnset = []
+    for raw in source.get("moves", []):
+        item = str(raw)
+        if ":" not in item:
+            continue
+        how, move = item.split(":",1)
+        level = None
+        if how.isdigit():
+            level, how = int(how), "level"
+        if how not in ["level","egg","tm","tutor","legacy","special"]:
+            continue
+        entry = {"move":move.lower(),"how":how}
+        if level is not None:
+            entry["level"] = level
+        learnset.append(entry)
+    return {
+        "dex":int(source.get("nationalPokedexNumber",0)),
+        "name":source.get("name",""),
+        "types":types,
+        "stats":{
+            "hp":int(stats.get("hp",50)),
+            "atk":int(stats.get("attack",50)),
+            "def":int(stats.get("defence",50)),
+            "spa":int(stats.get("special_attack",50)),
+            "spd":int(stats.get("special_defence",50)),
+            "spe":int(stats.get("speed",50)),
+        },
+        "weight_kg":float(source.get("weight",200))/10.0,
+        "height_m":float(source.get("height",10))/10.0,
+        "abilities":abilities,
+        "learnset":learnset,
+    }
+
+
+def download_if_missing(target, url):
+    target.parent.mkdir(parents=True, exist_ok=True)
+    if not target.exists() or target.stat().st_size == 0:
+        target.write_bytes(fetch_bytes(url))
+
+
+def process_one(item, raw_base):
+    species_id = item["id"]
+    target_dir = POKEMON_DIR / species_id
+    target_dir.mkdir(parents=True, exist_ok=True)
+    species_source = f"common/src/main/resources/data/cobblemon/species/generation1/{species_id}.json"
+    metadata = fetch_json(raw_base, species_source)
+    species_data = convert_species(metadata)
+
+    model_path = target_dir / "model.json.gz"
+    normal_path = target_dir / "texture.png"
+    shiny_path = target_dir / "texture_shiny.png"
+
+    if not model_path.exists() or model_path.stat().st_size == 0:
+        geometry_bytes = fetch_bytes(raw_base + item["model"])
+        animation_bytes = fetch_bytes(raw_base + item["animations"])
+        geometry = json.loads(geometry_bytes.decode("utf-8"))
+        animations = json.loads(animation_bytes.decode("utf-8"))
+        model = convert_geometry(geometry, animations)
+        packed = json.dumps(model, separators=(",",":"), ensure_ascii=False).encode("utf-8")
+        model_path.write_bytes(gzip.compress(packed, compresslevel=9))
+
+    download_if_missing(normal_path, raw_base + item["texture"])
+    download_if_missing(shiny_path, raw_base + item["shiny_texture"])
+
+    attribution = (
+        f"{species_data['name']} model, animation and textures\n"
+        f"Source: Cobblemon-Global/Cobblemon at commit {SOURCE_COMMIT}.\n"
+        f"Model: {item['model']}\n"
+        f"Animations: {item['animations']}\n"
+        f"Texture: {item['texture']}\n"
+        f"Shiny texture: {item['shiny_texture']}\n"
+        "Conversion: Bedrock geometry and animation JSON converted to PokeBrawl's runtime model format.\n"
+        "License: Creative Commons Attribution-NonCommercial 3.0 Unported. See game/pokemon/LICENSE-models.txt.\n"
+        "Pokémon and Cobblemon are the property of their respective rights holders; this project is not affiliated with them.\n"
+    )
+    (target_dir / "ATTRIBUTION.txt").write_text(attribution, encoding="utf-8")
+    return species_id, species_data, not model_path.exists()
+
+
+def main():
+    global SOURCE_COMMIT
+    if not MANIFEST_PATH.exists():
+        raise SystemExit(f"Manifest missing: {MANIFEST_PATH}")
+    manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    SOURCE_COMMIT = manifest["source_commit"]
+    raw_base = f"https://raw.githubusercontent.com/Cobblemon-Global/Cobblemon/{SOURCE_COMMIT}/"
+    items = sorted(manifest["pokemon"], key=lambda item:int(item["dex"]))
+    if len(items) != 151:
+        raise SystemExit(f"Expected 151 species, found {len(items)}")
+
+    print(f"PokeBrawl Gen 1 import - Cobblemon {SOURCE_COMMIT[:10]}")
+    print("Existing model.json.gz files are preserved.")
+    species_records = {}
+    failures = []
+    new_models = 0
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+        future_map = {pool.submit(process_one,item,raw_base):item for item in items}
+        for future in concurrent.futures.as_completed(future_map):
+            item = future_map[future]
+            try:
+                species_id, data, _ = future.result()
+                species_records[species_id] = data
+                print(f"[{data['dex']:03d}/151] {data['name']} imported")
+            except Exception as exc:
+                failures.append((item["id"],str(exc)))
+                print(f"[ERROR] {item['id']}: {exc}",file=sys.stderr)
+
+    if failures:
+        print(f"\n{len(failures)} species failed. Fix the download/source issue and run this again.")
+        print("Already downloaded files are kept, so the next run can resume.")
+        for species_id,error in failures:
+            print(f" - {species_id}: {error}")
+        raise SystemExit(1)
+
+    species_records = dict(sorted(species_records.items(), key=lambda pair:int(pair[1]["dex"])))
+    SPECIES_OUTPUT.write_text(
+        json.dumps(species_records,ensure_ascii=False,indent=2)+"\n",
+        encoding="utf-8"
+    )
+    print("\nImport finished:")
+    print(" - 151 species with model, animations and normal/shiny textures")
+    print(f" - Species data: {SPECIES_OUTPUT}")
+    print(" - Existing models in the project were preserved.")
+    print("\nNow open the game folder in Godot and run PokeBrawl.")
+
+
+if __name__ == "__main__":
+    SOURCE_COMMIT = ""
+    main()
