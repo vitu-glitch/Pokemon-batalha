@@ -128,20 +128,23 @@ func _apply_graphics_quality() -> void:
 	var pending: Array = [main.arena]
 	while not pending.is_empty():
 		var node: Node = pending.pop_back()
-		if node is WorldEnvironment and node.environment != null:
-			var env: Environment = node.environment
-			if not node.has_meta("_quality_original_environment"):
-				node.set_meta("_quality_original_environment", {
-					"ssao": env.ssao_enabled,
-					"fog": env.volumetric_fog_enabled
-				})
-			var original: Dictionary = node.get_meta("_quality_original_environment")
-			env.ssao_enabled = bool(original.ssao) if graphics_quality != "performance" else false
-			env.volumetric_fog_enabled = bool(original.fog) if graphics_quality == "quality" else false
+		if node is WorldEnvironment:
+			var world_env := node as WorldEnvironment
+			if world_env.environment != null:
+				var env: Environment = world_env.environment
+				if not node.has_meta("_quality_original_environment"):
+					node.set_meta("_quality_original_environment", {
+						"ssao": env.ssao_enabled,
+						"fog": env.volumetric_fog_enabled
+					})
+				var original: Dictionary = node.get_meta("_quality_original_environment")
+				env.ssao_enabled = bool(original.ssao) if graphics_quality != "performance" else false
+				env.volumetric_fog_enabled = bool(original.fog) if graphics_quality == "quality" else false
 		if node is Light3D:
+			var light := node as Light3D
 			if not node.has_meta("_quality_original_shadows"):
-				node.set_meta("_quality_original_shadows", node.shadow_enabled)
-			node.shadow_enabled = bool(node.get_meta("_quality_original_shadows")) if graphics_quality != "performance" else false
+				node.set_meta("_quality_original_shadows", light.shadow_enabled)
+			light.shadow_enabled = bool(node.get_meta("_quality_original_shadows")) if graphics_quality != "performance" else false
 		for child in node.get_children():
 			pending.append(child)
 
