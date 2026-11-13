@@ -624,10 +624,24 @@ def process_one(item, raw_base):
             for channel_name, values in channels.items():
                 if len(values) % 3:
                     raise RuntimeError(f"Invalid {clip_name}/{bone_name}/{channel_name} track in {species_id}")
+    def has_motion(clip):
+        for channels in clip.get("bones", {}).values():
+            for values in channels.values():
+                if len(values) < 6:
+                    continue
+                first = values[:3]
+                for offset in range(3, len(values), 3):
+                    if any(abs(values[offset + axis] - first[axis]) > 0.0001 for axis in range(3)):
+                        return True
+        return False
+
     return species_id, species_data, {
         "bones": len(bones),
         "clips": len(animations_out),
         "vertices": vertex_count,
+        "idle_motion": has_motion(animations_out.get("ground_idle", {})),
+        "walk_motion": has_motion(animations_out.get("ground_walk", {})),
+        "animation_names": sorted(animations_out.keys()),
     }
 
 
@@ -645,6 +659,7 @@ def main():
     print(f"PokeBrawl Gen 1 import - Cobblemon {SOURCE_COMMIT[:10]}")
     print("Existing model.json.gz files are preserved.")
     species_records = {}
+    model_reports = {}
     failures = []
     new_models = 0
 
@@ -655,12 +670,33 @@ def main():
             try:
                 species_id, data, stats = future.result()
                 species_records[species_id] = data
-                print(f"[{data['dex']:03d}/151] {data['name']} imported "
+                model_reports[species_id] = stats
+                animation_warning = ""
+                if not stats["idle_motion"] or not stats["walk_motion"]:
+                    animation_warning = " [CHECK ANIMATION]"
+                print(f"[{data['dex']:03d}/151] {data['name']} imported{animation_warning} "
                       f"({stats['bones']} bones, {stats['clips']} animations, "
                       f"{stats['vertices']} vertices)")
             except Exception as exc:
                 failures.append((item["id"],str(exc)))
                 print(f"[ERROR] {item['id']}: {exc}",file=sys.stderr)
+
+    report_lines = [
+        "POKEBRAWL GEN 1 IMPORT REPORT",
+        f"Source commit: {SOURCE_COMMIT}",
+        "Legend: idle/walk = dynamic animation track detected after conversion",
+        "",
+    ]
+    for species_id, data in sorted(species_records.items(), key=lambda pair:int(pair[1]["dex"])):
+        stats = model_reports.get(species_id, {})
+        report_lines.append(
+            f"{data['dex']:03d} {species_id}: bones={stats.get('bones', 0)}, "
+            f"vertices={stats.get('vertices', 0)}, clips={stats.get('clips', 0)}, "
+            f"idle={stats.get('idle_motion', False)}, walk={stats.get('walk_motion', False)}"
+        )
+        report_lines.append("  animations: " + ", ".join(stats.get("animation_names", [])))
+    report_path = POKEMON_DIR / "gen1_import_report.txt"
+    report_path.write_text("\n".join(report_lines) + "\n", encoding="utf-8")
 
     if failures:
         print(f"\n{len(failures)} species failed. Fix the download/source issue and run this again.")
@@ -677,6 +713,7 @@ def main():
     print("\nImport finished:")
     print(" - 151 species with model, animations and normal/shiny textures")
     print(f" - Species data: {SPECIES_OUTPUT}")
+    print(f" - Diagnostic report: {report_path}")
     print(" - Existing models in the project were preserved.")
     print("\nNow open the game folder in Godot and run PokeBrawl.")
 
