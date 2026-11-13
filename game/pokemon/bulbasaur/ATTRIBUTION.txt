@@ -1,0 +1,10 @@
+Bulbasaur model and animations
+Source: Cobblemon assets, Cobblemon-Global/Cobblemon repository.
+Model: common/src/main/resources/assets/cobblemon/bedrock/pokemon/models/0001_bulbasaur/bulbasaur.geo.json
+Animations: common/src/main/resources/assets/cobblemon/bedrock/pokemon/animations/0001_bulbasaur/bulbasaur.animation.json
+Textures: common/src/main/resources/assets/cobblemon/textures/pokemon/0001_bulbasaur/
+Source repository: https://github.com/Cobblemon-Global/Cobblemon
+Conversion: converted from Bedrock geometry/animation JSON into PokeBrawl's runtime model data format.
+Changes: model and animations converted; original texture artwork retained.
+See LICENSE for the model's original license terms. The license prohibits commercial use unless separately permitted by the rights holder.
+Pokémon names and franchise elements are the property of their respective rights holders.

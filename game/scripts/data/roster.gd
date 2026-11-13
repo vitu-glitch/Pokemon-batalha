@@ -22,6 +22,16 @@ extends RefCounted
 ## through game/i18n/translations.csv.
 
 const POKEMON := {
+	"bulbasaur": {
+		"display_name": "Bulbasaur", "types": ["grass", "poison"], "cat": "special",
+		"style": "A sturdy little Grass-type that controls space with vines and punishes careless approaches.",
+		"height": 0.7, "radius": 0.42, "poise": 0, "hp": 780.0, "knockback": 1.05,
+		"speed": 6.1, "accel": 36.0, "turn": 10.0, "jump": 8.1, "gravity": 28.0, "air_control": 0.65,
+		"dodge": {"dist": 4.2, "dur": 0.27, "iframes": [0.04, 0.2], "recovery": 0.22, "charges": 2, "recharge": 1.5},
+		"moves": ["vinewhip", "razorleaf", "sludgebomb", "solarbeam"],
+		"passive": {"id": "overgrow", "display_name": "Overgrow",
+			"text": "At a third of its HP or less, its Grass moves hit 1.5 times as hard."},
+	},
 	"pikachu": {
 		"display_name": "Ash's Pikachu", "types": ["electric"], "cat": "special", "item": "lightball",
 		"style": "Ash's Pikachu, with its Light Ball: double Attack and Sp. Atk. Agile and frail; it pressures, changes direction and never stands still.",
